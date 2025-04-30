@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "350175004610",
+    "project_id": "motorbike-fuel-jimcom-ap-cb404",
+    "storage_bucket": "motorbike-fuel-jimcom-ap-cb404.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350175004610:android:f274186124a1942b73385b",
+        "android_client_info": {
+          "package_name": "com.bmw.motorbikefueljimcomapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCchHhSBScxEOnSuPCXNxbHgNaGifCmxhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
