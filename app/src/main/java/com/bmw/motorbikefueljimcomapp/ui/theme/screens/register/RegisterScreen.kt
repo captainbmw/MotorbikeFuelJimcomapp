@@ -25,8 +25,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.bmw.motorbikefueljimcomapp.R
 import com.bmw.motorbikefueljimcomapp.data.AuthViewModel
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 
@@ -47,7 +51,7 @@ fun RegisterScreen(navController:NavHostController) {
     var context= LocalContext.current
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color.White),
+        .paint(painter = painterResource(R.drawable.bike3), contentScale = ContentScale.FillBounds),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
 
@@ -66,7 +70,8 @@ fun RegisterScreen(navController:NavHostController) {
             keyboardOptions = KeyboardOptions . Default . copy (imeAction = ImeAction.Next),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .background(Color.White),
 
             )
         Spacer(modifier = Modifier.height(20.dp))
@@ -78,6 +83,7 @@ fun RegisterScreen(navController:NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
+                .background(Color.White)
         )
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(value =confirmpass , onValueChange = {
@@ -89,6 +95,7 @@ fun RegisterScreen(navController:NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
+                .background(Color.White)
         )
         Spacer(modifier = Modifier.height(20.dp))
 

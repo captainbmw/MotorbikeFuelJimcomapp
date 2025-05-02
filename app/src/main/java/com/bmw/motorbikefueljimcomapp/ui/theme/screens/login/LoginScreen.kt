@@ -54,7 +54,7 @@ fun LoginScreen(navController:NavHostController) {
     var context= LocalContext.current
     Column(modifier = Modifier
         .fillMaxSize()
-        .paint(painter = painterResource(R.drawable.bmw79), contentScale = ContentScale.FillBounds),
+        .paint(painter = painterResource(R.drawable.bike4), contentScale = ContentScale.FillBounds),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
 
