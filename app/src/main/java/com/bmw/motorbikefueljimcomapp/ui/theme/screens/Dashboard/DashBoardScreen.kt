@@ -1,4 +1,4 @@
-package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
+package com.bmw.motorbikefueljimcomapp.ui.theme.screens.Dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,13 +15,16 @@ import com.bmw.motorbikefueljimcomapp.data.LoanViewModel
 import com.bmw.motorbikefueljimcomapp.data.OwnerViewModel
 import com.bmw.motorbikefueljimcomapp.data.entities.LoanEntity
 import com.bmw.motorbikefueljimcomapp.data.entities.OwnerEntity
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Dashboard.parseDate
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun DashboardScreen(
     loanViewModel: LoanViewModel = viewModel(),
-    ownerViewModel: OwnerViewModel = viewModel()
+    ownerViewModel: OwnerViewModel = viewModel(),
+    onNavigateToLoanApplication: () -> Unit,
+    onNavigateToMotorbikeRegistration: () -> Unit,
+    onNavigateToDevotion: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -37,7 +40,10 @@ fun HomeScreen(
         DashboardContent(
             modifier = Modifier.padding(innerPadding),
             loanViewModel = loanViewModel,
-            ownerViewModel = ownerViewModel
+            ownerViewModel = ownerViewModel,
+            onNavigateToLoanApplication = onNavigateToLoanApplication,
+            onNavigateToMotorbikeRegistration = onNavigateToMotorbikeRegistration,
+            onNavigateToDevotion = onNavigateToDevotion
         )
     }
 }
@@ -46,13 +52,15 @@ fun HomeScreen(
 fun DashboardContent(
     modifier: Modifier = Modifier,
     loanViewModel: LoanViewModel,
-    ownerViewModel: OwnerViewModel
+    ownerViewModel: OwnerViewModel,
+    onNavigateToLoanApplication: () -> Unit,
+    onNavigateToMotorbikeRegistration: () -> Unit,
+    onNavigateToDevotion: () -> Unit
 ) {
     val allLoans: List<LoanEntity> by loanViewModel.allLoans.observeAsState(initial = emptyList())
     val allOwners: List<OwnerEntity> by ownerViewModel.allOwners.observeAsState(initial = emptyList())
 
-    val activeLoansCount = allLoans.count {it.status == "Active" }
-    // Implement logic to calculate overdue loans if needed
+    val activeLoansCount = allLoans.count { it.status == "Active" }
     val overdueLoansCount = allLoans.count { loan ->
         loan.status == "Active" &&
                 loan.dueDate.parseDate("")?.before(java.util.Date()) == true // Assuming you have a parseDate() extension
@@ -80,17 +88,38 @@ fun DashboardContent(
             DashboardCard(title = "Overdue Loans", value = overdueLoansCount.toString())
         }
 
-        DashboardCard(title = "Total Active Loan Amount", value = "KES ${String.format("%.2f", totalLoanAmount)}")
+        DashboardCard(
+            title = "Total Active Loan Amount",
+            value = "KES ${String.format("%.2f", totalLoanAmount)}"
+        )
         DashboardCard(title = "Registered Owners", value = allOwners.size.toString())
 
-        // Add more dashboard items or navigation buttons here as needed
-        Button(onClick = { /* TODO: Navigate to Loan Application */ }) {
-            Text("Apply for Loan")
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = onNavigateToLoanApplication
+            ) {
+                Text("Apply for Loan")
+            }
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = onNavigateToMotorbikeRegistration
+            ) {
+                Text("Register Motorbike")
+            }
         }
-        Button(onClick = { /* TODO: Navigate to Motorbike Registration */ }) {
-            Text("Register Motorbike")
-        }
-        Button(onClick = { /* TODO: Navigate to Devotion Screen */ }) {
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onNavigateToDevotion
+        ) {
             Text("Today's Devotion")
         }
     }
@@ -99,7 +128,7 @@ fun DashboardContent(
 @Composable
 fun DashboardCard(title: String, value: String) {
     Card(
-        modifier = Modifier.size(150.dp),
+        modifier = Modifier.size(width = 180.dp, height = 120.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -121,5 +150,14 @@ fun DashboardCard(title: String, value: String) {
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+// Extension function to parse date string (you might have a utility for this)
+fun String.parseDate(): java.util.Date? {
+    return try {
+        java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).parse(this)
+    } catch (e: Exception) {
+        null
     }
 }
