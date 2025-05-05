@@ -1,133 +1,114 @@
 package com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.bmw.motorbikefueljimcomapp.R
-import com.bmw.motorbikefueljimcomapp.data.AuthViewModel
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
+import com.bmw.motorbikefueljimcomapp.data.MotorbikeRegistrationViewModel
+import com.bmw.motorbikefueljimcomapp.data.entities.MotorbikeEntity
+import com.bmw.motorbikefueljimcomapp.model.OperationStatus
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController:NavHostController) {
-    var email by remember { mutableStateOf(TextFieldValue("")) }
-    var pass by remember { mutableStateOf(TextFieldValue("")) }
-    var confirmpass by remember { mutableStateOf(TextFieldValue("")) }
-    var context= LocalContext.current
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .paint(painter = painterResource(R.drawable.bike3), contentScale = ContentScale.FillBounds),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
+fun MotorbikeRegistrationScreen(
+    ownerId: String, // Pass the owner ID to link the motorbike
+    onNavigateBack: () -> Unit,
+    navHostController: NavHostController,
+    motorbikeRegistrationViewModel: MotorbikeRegistrationViewModel = viewModel()
+) {
+    var regNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var model by remember { mutableStateOf(TextFieldValue("")) }
+    var type by remember { mutableStateOf(TextFieldValue("")) }
+    var fuelType by remember { mutableStateOf(TextFieldValue("")) }
+    var workStation by remember { mutableStateOf(TextFieldValue("")) }
+    var insuranceCompany by remember { mutableStateOf(TextFieldValue("")) }
+    var insuranceType by remember { mutableStateOf(TextFieldValue("")) }
+    var insuranceExpiry by remember { mutableStateOf(TextFieldValue("")) } // Consider using a Date picker
 
-        Text(text = "Motorbike Registration",
-            color = Color.Black,
-            fontFamily = FontFamily.Cursive,
-            fontSize = 45.sp,
-            fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(20.dp))
+    val registrationStatus = motorbikeRegistrationViewModel.registrationStatus.observeAsState()
 
-        OutlinedTextField(
-            value = email, onValueChange = { email = it },
-            label = { Text(text = "Enter MotorbikeName") },
-            shape = RoundedCornerShape(16.dp),
-
-            keyboardOptions = KeyboardOptions . Default . copy (imeAction = ImeAction.Next),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .background(Color.White),
-
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Motorbike Registration") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        OutlinedTextField(value =pass , onValueChange = {pass=it},
-            label = { Text(text = "Enter password") },
-            shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .background(Color.White)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OutlinedTextField(value =confirmpass , onValueChange = {
-            confirmpass=it},
-            label = { Text(text = "Enter Confirm Pass") },
-            shape = RoundedCornerShape(16.dp),
-
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .background(Color.White)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-
-        Button(onClick = {
-            val myregister= AuthViewModel(navController,context)
-            myregister.signup(email.text.trim(),pass.text.trim(),confirmpass.text.trim())
-
-
-
-
-        }, modifier = Modifier.width(300.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
-        ) {
-            Text(text = "Register ",
-                color = Color.Cyan)
         }
-        Spacer(modifier = Modifier.height(20.dp))
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(value = regNumber, onValueChange = { regNumber = it }, label = { Text("Registration Number") })
+            OutlinedTextField(value = model, onValueChange = { model = it }, label = { Text("Model") })
+            OutlinedTextField(value = type, onValueChange = { type = it }, label = { Text("Type") })
+            OutlinedTextField(value = fuelType, onValueChange = { fuelType = it }, label = { Text("Fuel Type") })
+            OutlinedTextField(value = workStation, onValueChange = { workStation = it }, label = { Text("Work Station") })
+            OutlinedTextField(value = insuranceCompany, onValueChange = { insuranceCompany = it }, label = { Text("Insurance Company") })
+            OutlinedTextField(value = insuranceType, onValueChange = { insuranceType = it }, label = { Text("Insurance Type") })
+            OutlinedTextField(value = insuranceExpiry, onValueChange = { insuranceExpiry = it }, label = { Text("Insurance Expiry (YYYY-MM-DD)") })
 
-        Text(text = "Have an Account? Click to Login",
-            modifier = Modifier.clickable { navController.navigate(ROUTE_LOGIN) },
-            color = Color.Blue,
-            fontSize = 20.sp)
+            Button(onClick = {
+                val motorbike = MotorbikeEntity(
+                    ownerId = ownerId,
+                    regNumber = regNumber.toString(),
+                    model = model.toString(),
+                    type = type.toString(),
+                    fuelType = fuelType.toString(),
+                    workStation = workStation.toString(),
+                    insuranceCompany = insuranceCompany.toString(),
+                    insuranceType = insuranceType.toString(),
+                    insuranceExpiry = insuranceExpiry.toString()// Basic conversion
+                )
+                motorbikeRegistrationViewModel.registerMotorbike(motorbike) { newId ->
+                    // Optionally navigate or show a success message with the new ID
 
+                }
+            }) {
+                Text("Register Motorbike")
+            }
+
+            registrationStatus.value?.let { status ->
+                when (status) {
+                    is OperationStatus.Success -> Text(status.message, color = MaterialTheme.colorScheme.primary)
+                    is OperationStatus.Error -> Text(status.message, color = MaterialTheme.colorScheme.error)
+                    OperationStatus.Loading -> CircularProgressIndicator()
+                    null -> {}
+                }
+            }
+        }
     }
-
-
-
-}
-
-@Preview
-@Composable
-fun register() {
-    RegisterScreen(rememberNavController())
-
 }

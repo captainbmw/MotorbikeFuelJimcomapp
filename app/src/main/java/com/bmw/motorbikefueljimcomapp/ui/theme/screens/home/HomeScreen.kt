@@ -1,125 +1,144 @@
 package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
-
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bmw.motorbikefueljimcomapp.data.LoanViewModel
-import com.bmw.motorbikefueljimcomapp.data.OwnerViewModel
-import com.bmw.motorbikefueljimcomapp.data.entities.LoanEntity
-import com.bmw.motorbikefueljimcomapp.data.entities.OwnerEntity
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Dashboard.parseDate
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.bmw.motorbikefueljimcomapp.data.HomeScreenViewModel
+import com.bmw.motorbikefueljimcomapp.model.OperationStatus
+
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    loanViewModel: LoanViewModel = viewModel(),
-    ownerViewModel: OwnerViewModel = viewModel()
+    navController: NavHostController,
+    homeScreenViewModel: HomeScreenViewModel = viewModel()
 ) {
+    val activeOwnerCount = homeScreenViewModel.activeOwnerCount.observeAsState(0)
+    val activeLoanCount = homeScreenViewModel.activeLoanCount.observeAsState(0)
+    val operationStatus = homeScreenViewModel.operationStatus.observeAsState()
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("JIMCOM Dashboard") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.White
-                )
-            )
+            TopAppBar(title = { Text("Dashboard") })
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* TODO: Show a menu of add options */ }) {
+                Icon(Icons.Filled.Add, contentDescription = "Add New")
+            }
         }
-    ) { innerPadding ->
-        DashboardContent(
-            modifier = Modifier.padding(innerPadding),
-            loanViewModel = loanViewModel,
-            ownerViewModel = ownerViewModel
-        )
-    }
-}
-
-@Composable
-fun DashboardContent(
-    modifier: Modifier = Modifier,
-    loanViewModel: LoanViewModel,
-    ownerViewModel: OwnerViewModel
-) {
-    val allLoans: List<LoanEntity> by loanViewModel.allLoans.observeAsState(initial = emptyList())
-    val allOwners: List<OwnerEntity> by ownerViewModel.allOwners.observeAsState(initial = emptyList())
-
-    val activeLoansCount = allLoans.count {it.status == "Active" }
-    // Implement logic to calculate overdue loans if needed
-    val overdueLoansCount = allLoans.count { loan ->
-        loan.status == "Active" &&
-                loan.dueDate.parseDate("")?.before(java.util.Date()) == true // Assuming you have a parseDate() extension
-    }
-    val totalLoanAmount = allLoans.filter { it.status == "Active" }.sumOf { it.totalPayable }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            "Welcome to JIMCOM!",
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            DashboardCard(title = "Active Loans", value = activeLoansCount.toString())
-            DashboardCard(title = "Overdue Loans", value = overdueLoansCount.toString())
-        }
-
-        DashboardCard(title = "Total Active Loan Amount", value = "KES ${String.format("%.2f", totalLoanAmount)}")
-        DashboardCard(title = "Registered Owners", value = allOwners.size.toString())
-
-        // Add more dashboard items or navigation buttons here as needed
-        Button(onClick = { /* TODO: Navigate to Loan Application */ }) {
-            Text("Apply for Loan")
-        }
-        Button(onClick = { /* TODO: Navigate to Motorbike Registration */ }) {
-            Text("Register Motorbike")
-        }
-        Button(onClick = { /* TODO: Navigate to Devotion Screen */ }) {
-            Text("Today's Devotion")
-        }
-    }
-}
-
-@Composable
-fun DashboardCard(title: String, value: String) {
-    Card(
-        modifier = Modifier.size(150.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Greeting
+            val calendar = Calendar.getInstance()
+            val timeOfDay = when (calendar.get(Calendar.HOUR_OF_DAY)) {
+                in 0..11 -> "Good Morning"
+                in 12..16 -> "Good Afternoon"
+                else -> "Good Evening"
+            }
+            Text("$timeOfDay!", style = MaterialTheme.typography.headlineLarge)
+
+            // Summary Cards
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                SummaryCard(
+                    title = "Active Owners",
+                    count = activeOwnerCount.value,
+                    onClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+                SummaryCard(
+                    title = "Active Loans",
+                    count = activeLoanCount.value,
+                    onClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+                // You can add more summary cards here for Motorbikes, etc.
+            }
+
+            // Quick Actions Row
             Text(
-                title,
+                "Quick Actions",
                 style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 8.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Start
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                value,
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Button(onClick = {}) {
+                    Text("Add Owner")
+                }
+                Button(onClick = { /* TODO: Navigate to select owner for motorbike */ }) {
+                    Text("Add Motorbike")
+                }
+                Button(onClick = { /* TODO: Navigate to select owner & motorbike for loan */ }) {
+                    Text("Apply Loan")
+                }
+            }
+
+            // Operation Status Display
+            operationStatus.value?.let { status ->
+                Spacer(modifier = Modifier.height(16.dp))
+                when (status) {
+                    is OperationStatus.Success -> Text(status.message, color = MaterialTheme.colorScheme.primary)
+                    is OperationStatus.Error -> Text(status.message, color = MaterialTheme.colorScheme.error)
+                    OperationStatus.Loading -> CircularProgressIndicator()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SummaryCard(title: String, count: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+
+
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(title, style = MaterialTheme.typography.titleSmall, color = Color.Gray)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(count.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
