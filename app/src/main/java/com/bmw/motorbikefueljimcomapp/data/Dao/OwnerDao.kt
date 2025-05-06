@@ -1,28 +1,33 @@
 package com.bmw.motorbikefueljimcomapp.data.Dao
 
+import com.bmw.motorbikefueljimcomapp.data.entities.OwnerEntity
+
+
+
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bmw.motorbikefueljimcomapp.data.entities.OwnerEntity
-import com.bmw.motorbikefueljimcomapp.model.Owner
-import kotlinx.coroutines.flow.Flow
+import com.bmw.motorbikefueljimcomapp.data.Owner
 
 @Dao
 interface OwnerDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOwner(owner: OwnerEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertOwner(owner: Owner)
 
     @Update
-    suspend fun updateOwner(owner: OwnerEntity)
+    suspend fun updateOwner(owner: com.bmw.motorbikefueljimcomapp.data.OwnerEntity)
 
-    @Query("SELECT * FROM owners WHERE id = :ownerId")
-    suspend fun getOwner(ownerId: String): Owner?
+    @Query("SELECT * FROM owners WHERE idNumber = :idNumber")
+    suspend fun getOwnerByIdNumber(idNumber: String): OwnerEntity?
 
-    @Query("SELECT * FROM owners WHERE status = 'ACTIVE'")
-    fun getActiveOwners(): Flow<List<Owner>>
-    fun getOwnerByIdNumber(string: String): OwnerEntity?
-    fun updateOwnerStatus(i: Int, string: String)
-    fun getAllActiveOwners(): Flow<List<OwnerEntity>>
+    @Query("UPDATE owners SET status = :status WHERE id = :ownerId")
+    suspend fun updateOwnerStatus(ownerId: Int, status: String)
+
+    @Query("SELECT * FROM owners WHERE status = 'active'")
+    suspend fun getAllActiveOwners(): List<OwnerEntity>
+
+    @Query("SELECT * FROM owners")
+    suspend fun getAllOwners(): List<OwnerEntity>
 }

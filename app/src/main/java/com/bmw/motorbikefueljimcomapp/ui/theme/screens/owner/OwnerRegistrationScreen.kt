@@ -77,7 +77,9 @@ fun OwnerRegistrationScreen(
                     kraPin = kraPin,
                     phoneNumber = phoneNumber,
                     address = address,
-                    registrationDate = registrationDate
+                    registrationDate = registrationDate,
+                    id = TODO(),
+                    status = TODO()
                 )
                 ownerRegistrationViewModel.registerOwner(owner) {
                     // Optionally navigate or show a success message

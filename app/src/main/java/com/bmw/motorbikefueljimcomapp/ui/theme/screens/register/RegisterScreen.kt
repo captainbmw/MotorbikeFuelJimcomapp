@@ -45,6 +45,8 @@ import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 
 @Composable
 fun RegisterScreen(navController:NavHostController) {
+    var firstname by remember { mutableStateOf(TextFieldValue("")) }
+    var lastname by remember { mutableStateOf(TextFieldValue("")) }
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var pass by remember { mutableStateOf(TextFieldValue("")) }
     var confirmpass by remember { mutableStateOf(TextFieldValue("")) }
@@ -60,6 +62,35 @@ fun RegisterScreen(navController:NavHostController) {
             fontFamily = FontFamily.Cursive,
             fontSize = 45.sp,
             fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            value = firstname, onValueChange = { firstname = it },
+            label = { Text(text = "Enter Email") },
+            shape = RoundedCornerShape(16.dp),
+
+            keyboardOptions = KeyboardOptions . Default . copy (imeAction = ImeAction.Next),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(Color.White),
+
+            )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            value = lastname, onValueChange = { lastname = it },
+            label = { Text(text = "Enter Email") },
+            shape = RoundedCornerShape(16.dp),
+
+            keyboardOptions = KeyboardOptions . Default . copy (imeAction = ImeAction.Next),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(Color.White),
+
+            )
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
@@ -102,7 +133,7 @@ fun RegisterScreen(navController:NavHostController) {
 
         Button(onClick = {
             val myregister= AuthViewModel(navController,context)
-            myregister.signup(email.text.trim(),pass.text.trim(),confirmpass.text.trim())
+            myregister.signup(firstname.text.trim(),lastname.text.trim(),email.text.trim(),pass.text.trim(),confirmpass.text.trim())
 
 
 

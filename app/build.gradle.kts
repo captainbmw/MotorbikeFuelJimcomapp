@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.material3.v111)
     implementation(libs.google.firebase.database.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
 
 
 

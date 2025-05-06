@@ -19,14 +19,14 @@ class AuthViewModel (var navController: NavHostController,var context: Context){
         mAuth= FirebaseAuth.getInstance()
 
     }
-    fun signup(email:String,pass:String,confpass:String){
+    fun signup(firstname: String, lastname: String, email: String, pass:String, confirmpass:String){
 
 
-        if (email.isBlank() || pass.isBlank() || confpass.isBlank()){
+        if (firstname.isBlank()||lastname.isBlank()||email.isBlank() || pass.isBlank() || confirmpass.isBlank()){
 
-            Toast.makeText(context,"Please email and password can't be blank",Toast.LENGTH_LONG).show()
+            Toast.makeText(context,"Please firstname,lastname ,email and password can't be blank",Toast.LENGTH_LONG).show()
             return
-        }else if (pass != confpass){
+        }else if (pass != confirmpass){
             Toast.makeText(context,"password do not match",Toast.LENGTH_LONG).show()
             return
         }else{

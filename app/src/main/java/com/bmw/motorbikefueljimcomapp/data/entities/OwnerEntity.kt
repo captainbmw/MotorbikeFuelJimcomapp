@@ -8,11 +8,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "owners")
 data class OwnerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val fullName: String,
-    @ColumnInfo(name = "id_number") val idNumber: String,
-    val kraPin: String,
-    val phoneNumber: String,
-    val address: String,
-    val registrationDate: String,
-    val status: String = "Active"
+    @ColumnInfo(name = "fullName") val fullName: String,
+    @ColumnInfo(name = "idNumber") val idNumber: String,
+    @ColumnInfo(name = "kraPin") val kraPin: String,
+    @ColumnInfo(name = "phoneNumber") val phoneNumber: String,
+    @ColumnInfo(name = "address") val address: String,
+    @ColumnInfo(name = "registrationDate") val registrationDate: String,
+    @ColumnInfo(name = "status") val status: String
 )

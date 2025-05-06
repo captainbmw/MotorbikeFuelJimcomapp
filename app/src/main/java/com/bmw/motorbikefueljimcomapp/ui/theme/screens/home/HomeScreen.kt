@@ -1,18 +1,27 @@
 package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
+
+
+
+
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -20,35 +29,62 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.bmw.motorbikefueljimcomapp.data.HomeScreenViewModel
-import com.bmw.motorbikefueljimcomapp.model.OperationStatus
-
-import java.util.Calendar
+import androidx.navigation.compose.rememberNavController
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOAN
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_MOTORBIKE
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    homeScreenViewModel: HomeScreenViewModel = viewModel()
-) {
-    val activeOwnerCount = homeScreenViewModel.activeOwnerCount.observeAsState(0)
-    val activeLoanCount = homeScreenViewModel.activeLoanCount.observeAsState(0)
-    val operationStatus = homeScreenViewModel.operationStatus.observeAsState()
+    homeScreenViewModel: HomeScreenViewModel = viewModel(factory = HomeScreenViewModelFactory(LocalContext.current))
 
+) {
+    val ownerCount = homeScreenViewModel.ownerCount.observeAsState(0)
+    val motorbikeCount = homeScreenViewModel.motorbikeCount.observeAsState(0)
+    val loanCount = homeScreenViewModel.loanCount.observeAsState(0)
+
+    HomeScreenContent(
+        navController = navController,
+        ownerCount = ownerCount.value,
+        motorbikeCount = motorbikeCount.value,
+        loanCount = loanCount.value
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenContent(
+    navController: NavHostController,
+    ownerCount: Int,
+    motorbikeCount: Int,
+    loanCount: Int
+) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Dashboard") })
+            TopAppBar(title = {
+                Text(
+                    "Motorbike Fuel Jimcom App",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Blue,
+                    modifier = Modifier.padding(start = 16.dp),
+                )
+            })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO: Show a menu of add options */ }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add New")
+            FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
+                Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
             }
         }
+
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -58,67 +94,66 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Greeting
-            val calendar = Calendar.getInstance()
-            val timeOfDay = when (calendar.get(Calendar.HOUR_OF_DAY)) {
-                in 0..11 -> "Good Morning"
-                in 12..16 -> "Good Afternoon"
-                else -> "Good Evening"
-            }
-            Text("$timeOfDay!", style = MaterialTheme.typography.headlineLarge)
 
-            // Summary Cards
+            // Summary Cards Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 SummaryCard(
-                    title = "Active Owners",
-                    count = activeOwnerCount.value,
-                    onClick = {},
+                    title = "Owners",
+                    count = ownerCount,
+                    onClick = { navController.navigate(ROUTE_OWNER) },
                     modifier = Modifier.weight(1f)
                 )
                 SummaryCard(
-                    title = "Active Loans",
-                    count = activeLoanCount.value,
-                    onClick = {},
+                    title = "Motorbikes",
+                    count = motorbikeCount,
+                    onClick = { navController.navigate(ROUTE_MOTORBIKE) },
                     modifier = Modifier.weight(1f)
                 )
-                // You can add more summary cards here for Motorbikes, etc.
+                SummaryCard(
+                    title = "Loans",
+                    count = loanCount,
+                    onClick = { navController.navigate(ROUTE_LOAN) },
+                    modifier = Modifier.weight(1f)
+                )
             }
 
-            // Quick Actions Row
             Text(
                 "Quick Actions",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 8.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Start
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 8.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+            Button(
+                onClick = { navController.navigate(ROUTE_OWNER) },
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(bottom = 16.dp)
             ) {
-                Button(onClick = {}) {
-                    Text("Add Owner")
-                }
-                Button(onClick = { /* TODO: Navigate to select owner for motorbike */ }) {
-                    Text("Add Motorbike")
-                }
-                Button(onClick = { /* TODO: Navigate to select owner & motorbike for loan */ }) {
-                    Text("Apply Loan")
-                }
+                Text("Add Owner")
+            }
+            Button(
+                onClick = { navController.navigate(ROUTE_MOTORBIKE) },
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(bottom = 16.dp)
+            ) {
+                Text("Add Motorbike")
+            }
+            Button(
+                onClick = { navController.navigate(ROUTE_LOAN) },
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(bottom = 16.dp)
+            ) {
+                Text("Apply Loan")
             }
 
-            // Operation Status Display
-            operationStatus.value?.let { status ->
-                Spacer(modifier = Modifier.height(16.dp))
-                when (status) {
-                    is OperationStatus.Success -> Text(status.message, color = MaterialTheme.colorScheme.primary)
-                    is OperationStatus.Error -> Text(status.message, color = MaterialTheme.colorScheme.error)
-                    OperationStatus.Loading -> CircularProgressIndicator()
-                }
-            }
         }
     }
 }
@@ -129,8 +164,6 @@ fun SummaryCard(title: String, count: Int, onClick: () -> Unit, modifier: Modifi
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-
-
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -138,7 +171,18 @@ fun SummaryCard(title: String, count: Int, onClick: () -> Unit, modifier: Modifi
         ) {
             Text(title, style = MaterialTheme.typography.titleSmall, color = Color.Gray)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(count.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Text(
+                count.toString(),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenPreview() {
+    val navController = rememberNavController()
+    HomeScreenContent(navController = navController, ownerCount = 10, motorbikeCount = 5, loanCount = 2)
 }
