@@ -3,6 +3,7 @@ package com.bmw.motorbikefueljimcomapp.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,13 +15,19 @@ import com.bmw.motorbikefueljimcomapp.ui.theme.screens.login.LoginScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike.MotorbikeRegistrationScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.owner.OwnerRegistrationScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.register.RegisterScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.splash.Splash_page
 
 
 @Composable
-fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= rememberNavController(),startDestination:String= ROUTE_LOGIN) {
+fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= rememberNavController(),startDestination:String= ROUTE_SPLASH) {
 
     NavHost(navController = navController, modifier=modifier, startDestination = startDestination ){
         composable(ROUTE_SPLASH) {
+            Splash_page(navController)
+
+        }
+        composable(ROUTE_HOME){
+            HomeScreen(navController)
 
         }
         composable(ROUTE_LOGIN){
@@ -30,10 +37,7 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
             RegisterScreen(navController)
         }
 
-        composable(ROUTE_HOME){
-            HomeScreen(navController)
 
-        }
         composable(ROUTE_OWNER){
             OwnerRegistrationScreen(onNavigateBack = {navController.popBackStack()}, navController = 33.dp)
 
@@ -44,6 +48,12 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
         composable(ROUTE_REPAYMENT) {
             RepaymentScreen(loanId = "", onNavigateBack = {navController.popBackStack()})
         }
+        composable(ROUTE_LOAN) {
+//            LoanApplicationScreen(ownerId = "", motorbikeId = "", onNavigateBack = {navController.popBackStack()}, onNavigateToLoanDetails = {navController.popBackStack()}, navHostController = NavController)
+
+
+        }
+
 
     }
 }

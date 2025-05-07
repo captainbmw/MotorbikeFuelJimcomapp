@@ -3,6 +3,7 @@ package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
 
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,14 +29,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.bmw.motorbikefueljimcomapp.R
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOAN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_MOTORBIKE
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
@@ -90,10 +95,18 @@ fun HomeScreenContent(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(16.dp)
+                .paint(painter = painterResource(R.drawable.bike3), contentScale = ContentScale.FillBounds)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.Center
         ) {
+            Text("Welcome to Motorbike Fuel Jimcom App",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(16.dp),
+                color = Color.Blue,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+
 
             // Summary Cards Row
             Row(
@@ -116,7 +129,9 @@ fun HomeScreenContent(
                     title = "Loans",
                     count = loanCount,
                     onClick = { navController.navigate(ROUTE_LOAN) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .weight(1f)
                 )
             }
 
@@ -129,6 +144,7 @@ fun HomeScreenContent(
                     .padding(top = 16.dp, bottom = 8.dp),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
+
             Button(
                 onClick = { navController.navigate(ROUTE_OWNER) },
                 modifier = Modifier
@@ -179,6 +195,9 @@ fun SummaryCard(title: String, count: Int, onClick: () -> Unit, modifier: Modifi
         }
     }
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable

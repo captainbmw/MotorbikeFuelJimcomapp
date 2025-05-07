@@ -57,12 +57,12 @@ fun RegisterScreen(navController:NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
 
-        Text(text = "Register here",
-            color = Color.Black,
-            fontFamily = FontFamily.Cursive,
+        Text(text = "Register page",
+            color = Color.Cyan,
+            fontFamily = FontFamily.Monospace,
             fontSize = 45.sp,
             fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(20.dp))
+
 
         OutlinedTextField(
             value = firstname, onValueChange = { firstname = it },
@@ -77,7 +77,7 @@ fun RegisterScreen(navController:NavHostController) {
 
             )
 
-        Spacer(modifier = Modifier.height(20.dp))
+
 
         OutlinedTextField(
             value = lastname, onValueChange = { lastname = it },
@@ -91,7 +91,7 @@ fun RegisterScreen(navController:NavHostController) {
                 .background(Color.White),
 
             )
-        Spacer(modifier = Modifier.height(20.dp))
+
 
         OutlinedTextField(
             value = email, onValueChange = { email = it },
@@ -105,7 +105,7 @@ fun RegisterScreen(navController:NavHostController) {
                 .background(Color.White),
 
             )
-        Spacer(modifier = Modifier.height(20.dp))
+
 
         OutlinedTextField(value =pass , onValueChange = {pass=it},
             label = { Text(text = "Enter password") },
@@ -116,7 +116,7 @@ fun RegisterScreen(navController:NavHostController) {
                 .padding(8.dp)
                 .background(Color.White)
         )
-        Spacer(modifier = Modifier.height(20.dp))
+
         OutlinedTextField(value =confirmpass , onValueChange = {
             confirmpass=it},
             label = { Text(text = "Enter Confirm Pass") },
@@ -128,7 +128,7 @@ fun RegisterScreen(navController:NavHostController) {
                 .padding(8.dp)
                 .background(Color.White)
         )
-        Spacer(modifier = Modifier.height(20.dp))
+
 
 
         Button(onClick = {
@@ -144,7 +144,7 @@ fun RegisterScreen(navController:NavHostController) {
             Text(text = "Register ",
                 color = Color.Cyan)
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         Text(text = "Have an Account? Click to Login",
             modifier = Modifier.clickable { navController.navigate(ROUTE_LOGIN) },
