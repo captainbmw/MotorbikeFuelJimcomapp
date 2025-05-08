@@ -1,5 +1,6 @@
 package com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -31,9 +32,6 @@ import com.bmw.motorbikefueljimcomapp.data.LoanApplicationViewModel
 import com.bmw.motorbikefueljimcomapp.model.LoanApplication
 import com.bmw.motorbikefueljimcomapp.model.OperationStatus
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,11 +41,12 @@ fun LoanApplicationDetailsScreen(
     loanApplicationViewModel: LoanApplicationViewModel = viewModel()
 ) {
     var loanApplication by remember { mutableStateOf<LoanApplication?>(null) }
-    val operationStatus = loanApplicationViewModel.operationStatus.observeAsState()
+    val operationStatus by loanApplicationViewModel.operationStatus.observeAsState()
     var showUpdateStatusDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(applicationId) {
         loanApplicationViewModel.viewModelScope.launch {
+            loanApplication = null
             val application = loanApplicationViewModel.getLoanApplicationById(applicationId)
             loanApplication = application
         }
@@ -70,59 +69,50 @@ fun LoanApplicationDetailsScreen(
                 .padding(paddingValues)
                 .padding(16.dp),
         ) {
-            if (loanApplication != null) {
-                val application = loanApplication!!
-                Text("Application ID: ${application.id}", fontWeight = FontWeight.Bold)
-                Text("Owner ID: ${application.ownerId}")
-                Text("Motorbike ID: ${application.motorbikeId}")
-                Text("Loan Amount: ${application.loanAmount}")
-                Text("Application Date: ${
-                    SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(
-                        Date(application.applicationDate)
-                    )
-                }")
-                Text("Status: ${application.status}", fontWeight = FontWeight.Bold)
-                Text("Loan Purpose: ${application.loanPurpose}")
-                Text("Repayment Plan: ${application.repaymentPlan}")
+            when (operationStatus) {
+                is OperationStatus.Loading -> CircularProgressIndicator()
+                is OperationStatus.Error -> Text(
+                    text = (operationStatus as OperationStatus.Error).message,
+                    color = MaterialTheme.colorScheme.error
+                )
 
-                if (application.notes != null) {
-                    Text("Notes: ${application.notes}")
-                }
+                is OperationStatus.Success -> {
+                    if (loanApplication != null) {
+                        val application = loanApplication!!
+                        Text("Application ID: ${application.id}", fontWeight = FontWeight.Bold)
+                        Text("Owner ID: ${application.ownerId}")
+                        Text("Motorbike ID: ${application.motorbikeId}")
+                        Text("Loan Amount: ${application.loanAmount}")
+                        Text("Interest Rate: ${application.interestRate}")
+                        Text("Purpose: ${application.loanPurpose}")
+                        Text("Repayment Plan: ${application.repaymentPlan}")
+                        Text("Status: ${application.status}")
+                        Text("Notes: ${application.notes ?: "None"}")
 
-                Spacer(modifier = Modifier.height(16.dp))
-                if (application.status == "Pending") {
-                    Button(onClick = { showUpdateStatusDialog = true }) {
-                        Text("Update Status")
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(onClick = { showUpdateStatusDialog = true }) {
+                            Text("Update Status")
+                        }
+
+                        if (showUpdateStatusDialog) {
+                            UpdateApplicationStatusDialog(
+                                application = application,
+                                onDismiss = { showUpdateStatusDialog = false },
+                                onStatusUpdated = { updatedStatus, notes ->
+                                    loanApplicationViewModel.updateLoanApplicationStatus(
+                                        application.id,
+                                        updatedStatus,
+                                        notes
+                                    )
+                                    showUpdateStatusDialog = false
+                                }
+                            )
+                        }
                     }
                 }
-            } else {
-                Text("Loading application details...")
-            }
-
-            operationStatus.value?.let { status ->
-                Spacer(modifier = Modifier.height(16.dp))
-                when (status) {
-                    is OperationStatus.Success -> Text(status.message, color = MaterialTheme.colorScheme.primary)
-                    is OperationStatus.Error -> Text(status.message, color = MaterialTheme.colorScheme.error)
-                    OperationStatus.Loading -> CircularProgressIndicator()
-                    else -> {}
-                }
+                else -> {}
             }
         }
-    }
-
-    if (showUpdateStatusDialog) {
-        UpdateApplicationStatusDialog(
-            applicationId = applicationId,
-            onDismiss = { showUpdateStatusDialog = false },
-            onStatusUpdated = {
-                showUpdateStatusDialog = false
-                loanApplicationViewModel.viewModelScope.launch {
-                    val newApplication = loanApplicationViewModel.getLoanApplicationById(applicationId)
-                    loanApplication = newApplication
-                }
-            },
-            loanApplicationViewModel = loanApplicationViewModel
-        )
     }
 }

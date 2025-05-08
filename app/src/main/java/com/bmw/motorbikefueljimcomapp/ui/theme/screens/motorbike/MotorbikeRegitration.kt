@@ -1,8 +1,13 @@
 package com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike
 
+
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -24,40 +29,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.MotorbikeRegistrationViewModel
 import com.bmw.motorbikefueljimcomapp.data.entities.MotorbikeEntity
 import com.bmw.motorbikefueljimcomapp.model.OperationStatus
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MotorbikeRegistrationScreen(
-    ownerId: String, // Pass the owner ID to link the motorbike
-    onNavigateBack: () -> Unit,
-    navHostController: NavHostController,
+    navController: NavHostController,
     motorbikeRegistrationViewModel: MotorbikeRegistrationViewModel = viewModel()
 ) {
-    var regNumber by remember { mutableStateOf(TextFieldValue("")) }
-    var model by remember { mutableStateOf(TextFieldValue("")) }
-    var type by remember { mutableStateOf(TextFieldValue("")) }
-    var fuelType by remember { mutableStateOf(TextFieldValue("")) }
-    var workStation by remember { mutableStateOf(TextFieldValue("")) }
-    var insuranceCompany by remember { mutableStateOf(TextFieldValue("")) }
-    var insuranceType by remember { mutableStateOf(TextFieldValue("")) }
-    var insuranceExpiry by remember { mutableStateOf(TextFieldValue("")) } // Consider using a Date picker
+    var brand by remember { mutableStateOf("") }
+    var model by remember { mutableStateOf("") }
+    var year by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf("") }
 
-    val registrationStatus = motorbikeRegistrationViewModel.registrationStatus.observeAsState()
+    val operationStatus by motorbikeRegistrationViewModel.registrationStatus.observeAsState()
+
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Motorbike Registration") },
+                title = { Text("Register Motorbike") },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -66,49 +68,107 @@ fun MotorbikeRegistrationScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(value = regNumber, onValueChange = { regNumber = it }, label = { Text("Registration Number") })
-            OutlinedTextField(value = model, onValueChange = { model = it }, label = { Text("Model") })
-            OutlinedTextField(value = type, onValueChange = { type = it }, label = { Text("Type") })
-            OutlinedTextField(value = fuelType, onValueChange = { fuelType = it }, label = { Text("Fuel Type") })
-            OutlinedTextField(value = workStation, onValueChange = { workStation = it }, label = { Text("Work Station") })
-            OutlinedTextField(value = insuranceCompany, onValueChange = { insuranceCompany = it }, label = { Text("Insurance Company") })
-            OutlinedTextField(value = insuranceType, onValueChange = { insuranceType = it }, label = { Text("Insurance Type") })
-            OutlinedTextField(value = insuranceExpiry, onValueChange = { insuranceExpiry = it }, label = { Text("Insurance Expiry (YYYY-MM-DD)") })
+            OutlinedTextField(
+                value = brand,
+                onValueChange = { brand = it },
+                label = { Text("Brand") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = model,
+                onValueChange = { model = it },
+                label = { Text("Model") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = year,
+                onValueChange = { year = it },
+                label = { Text("Year") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = color,
+                onValueChange = { color = it },
+                label = { Text("Color") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {
-                val motorbike = MotorbikeEntity(
-                    ownerId = ownerId,
-                    regNumber = regNumber.toString(),
-                    model = model.toString(),
-                    type = type.toString(),
-                    fuelType = fuelType.toString(),
-                    workStation = workStation.toString(),
-                    insuranceCompany = insuranceCompany.toString(),
-                    insuranceType = insuranceType.toString(),
-                    insuranceExpiry = insuranceExpiry.toString()// Basic conversion
-                )
-                motorbikeRegistrationViewModel.registerMotorbike(motorbike) { newId ->
-                    // Optionally navigate or show a success message with the new ID
+            when (operationStatus) {
+                is OperationStatus.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is OperationStatus.Error -> {
+                    Text(
+                        text = (operationStatus as OperationStatus.Error).message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                is OperationStatus.Success -> {
+                    // Reset form fields if successful
+                    brand = ""
+                    model = ""
+                    year = ""
+                    color = ""
+                    Text(
+                        text = (operationStatus as OperationStatus.Success).message,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
                 }
-            }) {
-                Text("Register Motorbike")
-            }
-
-            registrationStatus.value?.let { status ->
-                when (status) {
-                    is OperationStatus.Success -> Text(status.message, color = MaterialTheme.colorScheme.primary)
-                    is OperationStatus.Error -> Text(status.message, color = MaterialTheme.colorScheme.error)
-                    OperationStatus.Loading -> CircularProgressIndicator()
-                    null -> {}
+                else -> {
+                    Button(
+                        onClick = {
+                            if (brand.isNotEmpty() && model.isNotEmpty() && year.isNotEmpty() && color.isNotEmpty()) {
+                                motorbikeRegistrationViewModel.registerMotorbike(
+                                    MotorbikeEntity(
+                                        brand = brand,
+                                        model = model,
+                                        year = year.toInt(),
+                                        color = color,
+                                        ownerId = "",
+                                        id = TODO(),
+                                        regNumber = TODO(),
+                                        type = TODO(),
+                                        fuelType = TODO(),
+                                        workStation = TODO(),
+                                        insuranceCompany = TODO(),
+                                        insuranceType = TODO(),
+                                        insuranceExpiry = TODO(),
+                                        status = TODO(),
+                                        createdAt = TODO(),
+                                        updatedAt = TODO()
+                                    )
+                                ) { newMotorbikeId ->
+                                    // Handle the new motorbike ID here
+                                    // e.g., navigate to a details screen
+                                    // or show a confirmation message
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Register Motorbike")
+                    }
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MotorbikeRegistrationScreenPreview() {
+    MotorbikeRegistrationScreen(rememberNavController())
 }

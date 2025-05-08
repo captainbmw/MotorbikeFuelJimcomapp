@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
+
+
 }
 
 android {
@@ -75,6 +77,9 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.database)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -82,5 +87,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
+    debugImplementation(libs.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

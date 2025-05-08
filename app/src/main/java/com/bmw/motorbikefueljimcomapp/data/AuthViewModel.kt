@@ -4,7 +4,6 @@ package com.bmw.motorbikefueljimcomapp.data
 import android.content.Context
 import android.widget.Toast
 import androidx.navigation.NavHostController
-import com.bmw.motorbikefueljimcomapp.model.Owner
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REGISTER
@@ -32,7 +31,7 @@ class AuthViewModel (var navController: NavHostController,var context: Context){
         }else{
             mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener{
                 if (it.isSuccessful){
-                    val userdata= Owner(email,pass,mAuth.currentUser!!.uid)
+                    val userdata= Owner(firstname,lastname,email,pass,mAuth.currentUser!!.uid)
                     val regeRef= FirebaseDatabase.getInstance().getReference()
                         .child("Users/"+mAuth.currentUser!!.uid)
                     regeRef.setValue(userdata).addOnCompleteListener{

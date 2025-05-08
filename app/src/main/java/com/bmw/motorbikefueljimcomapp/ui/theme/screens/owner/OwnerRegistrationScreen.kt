@@ -100,6 +100,7 @@ fun OwnerRegistrationScreen(
                     is OperationStatus.Error -> Text(status.message, color = MaterialTheme.colorScheme.error)
                     OperationStatus.Loading -> CircularProgressIndicator()
                     null -> {}
+                    OperationStatus.Idle -> TODO()
                 }
             }
         }

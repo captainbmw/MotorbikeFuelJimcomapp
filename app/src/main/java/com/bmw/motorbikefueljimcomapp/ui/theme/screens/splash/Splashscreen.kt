@@ -34,7 +34,7 @@ import kotlinx.coroutines.delay
 fun Splash_page(navController: NavHostController) {
     LaunchedEffect(Unit) {
         delay(3000)
-        navController.navigate(ROUTE_LOGIN)
+        navController.navigate(ROUTE_HOME)
     }
     Column(
         modifier = Modifier

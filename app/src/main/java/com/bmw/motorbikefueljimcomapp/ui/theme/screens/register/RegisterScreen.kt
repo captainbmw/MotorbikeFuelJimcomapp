@@ -66,7 +66,7 @@ fun RegisterScreen(navController:NavHostController) {
 
         OutlinedTextField(
             value = firstname, onValueChange = { firstname = it },
-            label = { Text(text = "Enter Email") },
+            label = { Text(text = "Enter Firstname") },
             shape = RoundedCornerShape(16.dp),
 
             keyboardOptions = KeyboardOptions . Default . copy (imeAction = ImeAction.Next),
@@ -81,7 +81,7 @@ fun RegisterScreen(navController:NavHostController) {
 
         OutlinedTextField(
             value = lastname, onValueChange = { lastname = it },
-            label = { Text(text = "Enter Email") },
+            label = { Text(text = "Enter Lastname") },
             shape = RoundedCornerShape(16.dp),
 
             keyboardOptions = KeyboardOptions . Default . copy (imeAction = ImeAction.Next),

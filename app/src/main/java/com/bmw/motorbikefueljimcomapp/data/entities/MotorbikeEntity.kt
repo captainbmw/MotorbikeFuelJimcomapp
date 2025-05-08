@@ -21,9 +21,12 @@ data class MotorbikeEntity(
     val workStation: String = "",
     val insuranceCompany: String = "",
     val insuranceType: String = "Third Party",
-    val insuranceExpiry: String ,
+    val insuranceExpiry: String,
     val status: String = "Active",
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    val brand: String,
+    val year: Int,
+    val color: String
 )
 

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "owners")
 data class OwnerEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: String,
     @ColumnInfo(name = "idNumber") val idNumber: String,
     @ColumnInfo(name = "status") val status: String
 )

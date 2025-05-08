@@ -3,7 +3,6 @@ package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
 
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +49,9 @@ import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
 @Composable
 fun HomeScreen(
     navController: NavHostController,
+    ownerCount: Int,
+    motorbikeCount: Int,
+    loanCount: Int,
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = HomeScreenViewModelFactory(LocalContext.current))
 
 ) {
@@ -56,22 +59,6 @@ fun HomeScreen(
     val motorbikeCount = homeScreenViewModel.motorbikeCount.observeAsState(0)
     val loanCount = homeScreenViewModel.loanCount.observeAsState(0)
 
-    HomeScreenContent(
-        navController = navController,
-        ownerCount = ownerCount.value,
-        motorbikeCount = motorbikeCount.value,
-        loanCount = loanCount.value
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeScreenContent(
-    navController: NavHostController,
-    ownerCount: Int,
-    motorbikeCount: Int,
-    loanCount: Int
-) {
     Scaffold(
         topBar = {
             TopAppBar(title = {
@@ -95,7 +82,10 @@ fun HomeScreenContent(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(16.dp)
-                .paint(painter = painterResource(R.drawable.bike3), contentScale = ContentScale.FillBounds)
+                .paint(
+                    painter = painterResource(R.drawable.bike3),
+                    contentScale = ContentScale.FillBounds
+                )
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -104,7 +94,7 @@ fun HomeScreenContent(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp),
-                color = Color.Blue,
+                color = Color.White,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center)
 
 
@@ -172,10 +162,14 @@ fun HomeScreenContent(
 
         }
     }
+
+
 }
 
+
+
 @Composable
-fun SummaryCard(title: String, count: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SummaryCard(title: String, count: State<Int>, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -197,11 +191,9 @@ fun SummaryCard(title: String, count: Int, onClick: () -> Unit, modifier: Modifi
 }
 
 
-
-
 @Preview(showBackground = true)
 @Composable
-fun ScreenPreview() {
-    val navController = rememberNavController()
-    HomeScreenContent(navController = navController, ownerCount = 10, motorbikeCount = 5, loanCount = 2)
+private fun ScreenPagePreview() {
+    HomeScreen(rememberNavController(), 10, 5, 3)
+    
 }
