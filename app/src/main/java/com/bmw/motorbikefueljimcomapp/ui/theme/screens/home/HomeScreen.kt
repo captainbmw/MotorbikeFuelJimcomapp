@@ -15,12 +15,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -42,22 +47,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.R
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOAN
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_MOTORBIKE
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REGISTER
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REPAYMENT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    ownerCount: Int,
-    motorbikeCount: Int,
-    loanCount: Int,
-    homeScreenViewModel: HomeScreenViewModel = viewModel(factory = HomeScreenViewModelFactory(LocalContext.current))
+
 
 ) {
-    val ownerCount = homeScreenViewModel.ownerCount.observeAsState(0)
-    val motorbikeCount = homeScreenViewModel.motorbikeCount.observeAsState(0)
-    val loanCount = homeScreenViewModel.loanCount.observeAsState(0)
+
 
     Scaffold(
         topBar = {
@@ -75,6 +78,37 @@ fun HomeScreen(
             FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
             }
+        },
+        bottomBar = {
+            NavigationBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Add New Owner") },
+                    label = { Text("Home") },
+                    selected = false)
+                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
+                    label = { Text("Login") },
+                    selected = false)
+
+                NavigationBarItem(onClick = { navController.navigate(ROUTE_REGISTER)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    icon = { Icon(Icons.Filled.Person, contentDescription = "Register") },
+                    label = { Text("Register") },
+                    selected = false)
+
+            }
         }
 
     ) { paddingValues ->
@@ -90,40 +124,40 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Welcome to Motorbike Fuel Jimcom App",
+            Text(
+                "Welcome to Motorbike Fuel Jimcom App",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp),
                 color = Color.White,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-
-
-            // Summary Cards Row
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
                 SummaryCard(
                     title = "Owners",
-                    count = ownerCount,
                     onClick = { navController.navigate(ROUTE_OWNER) },
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(16.dp))
                 SummaryCard(
                     title = "Motorbikes",
-                    count = motorbikeCount,
                     onClick = { navController.navigate(ROUTE_MOTORBIKE) },
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(16.dp))
                 SummaryCard(
                     title = "Loans",
-                    count = loanCount,
                     onClick = { navController.navigate(ROUTE_LOAN) },
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .weight(1f)
-                )
+                    modifier = Modifier.weight(1f))
             }
+
+
+
 
             Text(
                 "Quick Actions",
@@ -168,8 +202,10 @@ fun HomeScreen(
 
 
 
+
+
 @Composable
-fun SummaryCard(title: String, count: State<Int>, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SummaryCard(title: String,  onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -179,10 +215,10 @@ fun SummaryCard(title: String, count: State<Int>, onClick: () -> Unit, modifier:
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(title, style = MaterialTheme.typography.titleSmall, color = Color.Gray)
+            Text(title, style = MaterialTheme.typography.titleSmall, color = Color.Blue)
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                count.toString(),
+                "",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -193,7 +229,7 @@ fun SummaryCard(title: String, count: State<Int>, onClick: () -> Unit, modifier:
 
 @Preview(showBackground = true)
 @Composable
-private fun ScreenPagePreview() {
-    HomeScreen(rememberNavController(), 10, 5, 3)
+private fun HomeScreenPreview() {
+    HomeScreen(rememberNavController())
     
 }

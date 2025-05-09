@@ -27,7 +27,7 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
 
         }
         composable(ROUTE_HOME){
-           HomeScreen(navController,ownerCount = 0,motorbikeCount = 0,loanCount = 0)
+           HomeScreen(navController)
 
         }
         composable(ROUTE_LOGIN){
@@ -46,7 +46,7 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
             MotorbikeRegistrationScreen(navController)
         }
         composable(ROUTE_REPAYMENT) {
-            RepaymentScreen(loanId = "", onNavigateBack = {navController.popBackStack()})
+            RepaymentScreen(loanId = "",navController)
         }
         composable(ROUTE_LOAN) {
             LoanApplicationScreen(ownerId = "", motorbikeId = "", navController = navController)

@@ -1,20 +1,24 @@
 package com.bmw.motorbikefueljimcomapp.model
 
+import java.sql.Date
 
-class Owner{
-    var firstname:String=""
-    var lastname:String=""
-    var email:String=""
-    var pass:String=""
-    var userid:String=""
+data class Owner(
+    var fullname:String="",
+    var idNumber:String="",
+    var kraPin:String="",
+    var phoneNumber:String="",
+    var address:String="",
+    var registrationDate:String="",
+    var pass:String="",
+    var confirmpass:String="",
+    var uid:String=""
 
-    constructor(firstname:String,lastname:String,email:String,pass:String,userid:String){
-        this.firstname=firstname
-        this.lastname=lastname
-        this.email=email
-        this.pass=pass
-        this.userid=userid
+)
 
-    }
-    constructor()
-}
+
+
+
+
+
+
+

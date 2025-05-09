@@ -23,12 +23,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 import com.bmw.motorbikefueljimcomapp.data.RepaymentViewModel
 import com.bmw.motorbikefueljimcomapp.model.OperationStatus
 import com.bmw.motorbikefueljimcomapp.model.Repayment
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,7 +41,7 @@ import java.util.Locale
 @Composable
 fun RepaymentScreen(
     loanId: String,
-    onNavigateBack: () -> Unit,
+    navController: NavHostController,
     repaymentViewModel: RepaymentViewModel = viewModel()
 ) {
     val repayments = repaymentViewModel.repaymentsForLoan.observeAsState(initial = emptyList())
@@ -54,7 +58,7 @@ fun RepaymentScreen(
             TopAppBar(
                 title = { Text("Repayments for Loan: $loanId") },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {navController.navigate(ROUTE_HOME)}) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -177,4 +181,15 @@ fun AddRepaymentDialog(
             }
         }
     )
+}
+
+@Preview
+@Composable
+private fun RepaymentScreenPreview() {
+    RepaymentScreen(loanId = "1", rememberNavController())
+    RepaymentItem(repayment = Repayment(loanId = "1", amountPaid = 100.0, paymentMethod = "Credit Card", transactionId = "12345"))
+    AddRepaymentDialog(loanId = "1", onRepaymentRecorded = {}, onDismiss = {}, repaymentViewModel = viewModel())
+
+
+
 }

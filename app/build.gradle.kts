@@ -41,6 +41,15 @@ android {
         compose = true
     }
 }
+android {
+    // ... other configurations
+
+    packagingOptions {
+        resources {
+            exclude("META-INF/gradle/incremental.annotation.processors")
+        }
+    }
+}
 
 dependencies {
     implementation(libs.androidx.room.ktx)
