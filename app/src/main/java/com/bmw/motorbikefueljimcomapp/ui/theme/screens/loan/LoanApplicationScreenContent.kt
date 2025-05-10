@@ -23,45 +23,18 @@ import com.bmw.motorbikefueljimcomapp.model.OperationStatus
 
 @Composable
 fun LoanApplicationScreenContent(
-    loanApplicationViewModel: LoanApplicationViewModel,
-    paddingValues: PaddingValues,
-    onNavigateToLoanDetails: (String) -> Unit
+
 ) {
-    val loanApplications by loanApplicationViewModel.loanApplications.observeAsState(emptyList())
-    val operationStatus by loanApplicationViewModel.operationStatus.observeAsState(OperationStatus.Idle)
 
     LaunchedEffect(Unit) {
-        loanApplicationViewModel.getLoanApplications()
+
     }
 
     Column(
         modifier = Modifier
-            .padding(paddingValues)
+            .padding()
             .padding(16.dp)
     ) {
-        when (operationStatus) {
-            is OperationStatus.Loading -> CircularProgressIndicator()
-            is OperationStatus.Error -> Text(
-                text = (operationStatus as OperationStatus.Error).message,
-                color = MaterialTheme.colorScheme.error
-            )
 
-            is OperationStatus.Success -> {
-                if (loanApplications.isEmpty()) {
-                    Text("No loan applications found.")
-                } else {
-                    LazyColumn {
-                        items(loanApplications) { application ->
-                            LoanApplicationItem(
-                                application = application,
-                                onNavigateToLoanDetails = onNavigateToLoanDetails
-                            )
-                        }
-                    }
-                }
-            }
-
-            else -> {}
-        }
     }
 }

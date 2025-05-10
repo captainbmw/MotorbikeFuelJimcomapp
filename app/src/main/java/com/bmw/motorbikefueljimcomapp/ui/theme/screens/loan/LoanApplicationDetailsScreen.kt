@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -96,18 +97,8 @@ fun LoanApplicationDetailsScreen(
                         }
 
                         if (showUpdateStatusDialog) {
-                            UpdateApplicationStatusDialog(
-                                application = application,
-                                onDismiss = { showUpdateStatusDialog = false },
-                                onStatusUpdated = { updatedStatus, notes ->
-                                    loanApplicationViewModel.updateLoanApplicationStatus(
-                                        application.id,
-                                        updatedStatus,
-                                        notes
-                                    )
-                                    showUpdateStatusDialog = false
-                                }
-                            )
+                            
+
                         }
                     }
                 }
@@ -115,4 +106,25 @@ fun LoanApplicationDetailsScreen(
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun LoanApplicationDetailsScreenPreview() {
+    val mockApplication = LoanApplication(
+        id = "APP123456",
+        ownerId = "USER001",
+        motorbikeId = "BIKE123",
+        loanAmount = 7500.0,
+        interestRate = 5.5,
+        loanPurpose = "Business",
+        repaymentPlan = "12 months",
+        status = "Pending",
+        notes = "Requires additional verification"
+    )
+
+    LoanApplicationDetailsScreen(
+        applicationId = mockApplication.toString(),
+        onNavigateBack = {}
+
+    )
 }

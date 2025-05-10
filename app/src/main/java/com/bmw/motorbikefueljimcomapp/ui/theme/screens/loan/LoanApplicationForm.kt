@@ -13,18 +13,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.LoanApplicationViewModel
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun LoanApplicationForm(
-    ownerId: String,
-    motorbikeId: String,
-    onApplicationSubmitted: () -> Unit,
-    onDismiss: () -> Unit,
-    loanApplicationViewModel: LoanApplicationViewModel
+
+    navController: NavHostController
 ) {
     var loanAmount by remember { mutableStateOf("") }
     var loanPurpose by remember { mutableStateOf("") }
@@ -34,7 +35,7 @@ fun LoanApplicationForm(
     var notes by remember { mutableStateOf("") }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {},
         title = { Text("Loan Application Form") },
         text = {
             Column {
@@ -61,24 +62,23 @@ fun LoanApplicationForm(
             }
         },
         confirmButton = {
-            Button(onClick = {
-                loanApplicationViewModel.viewModelScope.launch {
-                    loanApplicationViewModel.updateLoanApplicationStatus(
-                        applicationId = "",
-                        status = "",
-                        notes
-                    )
-                    onApplicationSubmitted()
-                }
+            Button(onClick = {navController.navigate("loan")
             }) {
                 Text("Submit")
             }
         },
 
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(onClick = {navController.navigate("home")}) {
                 Text("Cancel")
             }
         }
     )
+}
+
+@Preview
+@Composable
+private fun LoanApplicationFormPreview() {
+    LoanApplicationForm(rememberNavController())
+    
 }

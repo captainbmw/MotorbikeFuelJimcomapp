@@ -20,20 +20,20 @@ class OwnerRegistrationViewModel (var navController: NavHostController,var conte
         mAuth= FirebaseAuth.getInstance()
 
     }
-    fun signup(fullname: String, idNumber: String, kraPin: String, phoneNumber: String, address: String, registrationDate: String,pass:String, confirmpass:String){
+    fun signup(fullname: String, idNumber: String, kraPin: String, phoneNumber: String, address: String, registrationDate: String,confirmidNumber: String){
 
 
         if (fullname.isBlank()||idNumber.isBlank()||kraPin.isBlank()||phoneNumber.isBlank()||address.isBlank()||registrationDate.isBlank()){
 
             Toast.makeText(context,"Please firstname,lastname ,email and password can't be blank",Toast.LENGTH_LONG).show()
             return
-        }else if (pass != confirmpass){
-            Toast.makeText(context,"password do not match",Toast.LENGTH_LONG).show()
+        }else if (idNumber != confirmidNumber){
+            Toast.makeText(context,"IdNumber do not match",Toast.LENGTH_LONG).show()
             return
         }else{
-            mAuth.createUserWithEmailAndPassword(fullname,pass).addOnCompleteListener{
+            mAuth.createUserWithEmailAndPassword(fullname,idNumber,).addOnCompleteListener{
                 if (it.isSuccessful){
-                    val ownerdata= Owner(fullname,idNumber,kraPin,phoneNumber,address,registrationDate,pass,confirmpass,mAuth.currentUser!!.uid)
+                    val ownerdata= Owner(fullname,idNumber,kraPin,phoneNumber,address,registrationDate,mAuth.currentUser!!.uid)
                     val regeRef= FirebaseDatabase.getInstance().getReference()
                         .child("Users/"+mAuth.currentUser!!.uid)
                     regeRef.setValue(ownerdata).addOnCompleteListener{
@@ -49,8 +49,8 @@ class OwnerRegistrationViewModel (var navController: NavHostController,var conte
         }
 
     }
-    fun login(email: String,pass: String){
-        mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener{
+    fun login(fullname: String,idNumber: String,kraPin: String,pass: String){
+        mAuth.signInWithEmailAndPassword(fullname,idNumber).addOnCompleteListener{
             if (it.isSuccessful){
                 Toast.makeText(context,"Successful Logged In",Toast.LENGTH_LONG).show()
                 navController.navigate(ROUTE_HOME)

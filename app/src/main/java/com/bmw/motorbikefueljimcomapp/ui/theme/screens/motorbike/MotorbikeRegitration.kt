@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +46,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.entities.MotorbikeEntity
 import com.bmw.motorbikefueljimcomapp.model.OperationStatus
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REGISTER
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +66,37 @@ fun MotorbikeRegistrationScreen(
     val context = LocalContext.current
 
     Scaffold(
+        bottomBar = {
+            NavigationBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                NavigationBarItem(onClick = { navController.navigate(ROUTE_HOME)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Add New Owner") },
+                    label = { Text("Home") },
+                    selected = false)
+                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
+                    label = { Text("Login") },
+                    selected = false)
+
+                NavigationBarItem(onClick = { navController.navigate(ROUTE_REGISTER)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    icon = { Icon(Icons.Filled.Person, contentDescription = "Register") },
+                    label = { Text("Register") },
+                    selected = false)
+
+            }
+        },
         topBar = {
             TopAppBar(
                 title = { Text("Register Motorbike",
@@ -70,6 +111,7 @@ fun MotorbikeRegistrationScreen(
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
+
 
             )
 
@@ -86,6 +128,7 @@ fun MotorbikeRegistrationScreen(
             OutlinedTextField(
                 value = brand,
                 onValueChange = { brand = it },
+                shape = RoundedCornerShape(16.dp),
                 label = { Text("Brand") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -93,6 +136,7 @@ fun MotorbikeRegistrationScreen(
             OutlinedTextField(
                 value = model,
                 onValueChange = { model = it },
+                shape = RoundedCornerShape(16.dp),
                 label = { Text("Model") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -101,6 +145,7 @@ fun MotorbikeRegistrationScreen(
                 value = year,
                 onValueChange = { year = it },
                 label = { Text("Year") },
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -108,12 +153,14 @@ fun MotorbikeRegistrationScreen(
                 value = color,
                 onValueChange = { color = it },
                 label = { Text("Color") },
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {},
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Register Motorbike")

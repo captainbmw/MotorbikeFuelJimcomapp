@@ -10,7 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Repayment.RepaymentScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.home.HomeScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.LoanApplicationForm
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.LoanApplicationScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.UpdateApplicationStatusDialog
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.login.LoginScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike.MotorbikeRegistrationScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.owner.OwnerRegistrationScreen
@@ -39,7 +41,7 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
 
 
         composable(ROUTE_OWNER){
-            OwnerRegistrationScreen(onNavigateBack = {navController.popBackStack()}, navController = 33.dp)
+            OwnerRegistrationScreen(navController)
 
         }
         composable(ROUTE_MOTORBIKE) {
@@ -49,11 +51,24 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
             RepaymentScreen(loanId = "",navController)
         }
         composable(ROUTE_LOAN) {
-            LoanApplicationScreen(ownerId = "", motorbikeId = "", navController = navController)
+            LoanApplicationScreen(navController)
 
 
 
 
+        }
+        composable(ROUTE_LOANITEM) {
+
+        }
+        composable(ROUTE_UPDATE) {
+            UpdateApplicationStatusDialog(currentStatus = "", onDismiss = {}, onConfirm = {selectedStatus, note ->
+                println("Confirmed: Status=$selectedStatus, Note=$note")
+                navController.popBackStack()
+            },navController)
+
+        }
+        composable(ROUTE_LOANFORM) {
+            LoanApplicationForm(navController)
         }
 
 
