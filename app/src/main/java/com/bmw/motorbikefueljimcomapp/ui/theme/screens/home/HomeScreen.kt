@@ -3,6 +3,7 @@ package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
 
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,28 +31,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.R
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_INSURANCE
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOAN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_MOTORBIKE
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REGISTER
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REPAYMENT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,28 +82,33 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    icon = { Icon(Icons.Filled.Home, contentDescription = "Add New Owner") },
-                    label = { Text("Home") },
-                    selected = false)
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
-                    label = { Text("Login") },
-                    selected = false)
+                NavigationBarItem(
+                    selected = true, // Mark this item as selected for the dashboard
+                    onClick = { navController.navigate(ROUTE_HOME) },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "home") },
+                    label = { Text("Home") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { /* Navigate to another screen */ },
+                    icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { /* Navigate to another screen */ },
+                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
+                    label = { Text("Settings") }
+                )
+//                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
+//                    icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
+//                    label = { Text("Login") },
+//                    selected = false)
 
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_REGISTER)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    icon = { Icon(Icons.Filled.Person, contentDescription = "Register") },
-                    label = { Text("Register") },
-                    selected = false)
+//                NavigationBarItem(onClick = { navController.navigate(ROUTE_OWNER)},
+//                    icon = { Icon(Icons.Filled.Person, contentDescription = "Register") },
+//                    label = { Text("Owner") },
+//                    selected = false)
 
             }
         }
@@ -155,44 +157,69 @@ fun HomeScreen(
                     onClick = { navController.navigate(ROUTE_LOAN) },
                     modifier = Modifier.weight(1f))
             }
-
-
-
-
-            Text(
-                "Quick Actions",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                SummaryCard(
+                    title = "Insurance",
+                    onClick = { navController.navigate(ROUTE_OWNER) },
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                SummaryCard(
+                    title = "Dashboard",
+                    onClick = { navController.navigate(ROUTE_MOTORBIKE) },
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                SummaryCard(
+                    title = "About",
+                    onClick = { navController.navigate(ROUTE_LOAN) },
+                    modifier = Modifier.weight(1f))
+            }
 
-            Button(
-                onClick = { navController.navigate(ROUTE_OWNER) },
-                modifier = Modifier
-                    .width(300.dp)
-                    .padding(bottom = 16.dp)
-            ) {
-                Text("Add Owner")
-            }
-            Button(
-                onClick = { navController.navigate(ROUTE_MOTORBIKE) },
-                modifier = Modifier
-                    .width(300.dp)
-                    .padding(bottom = 16.dp)
-            ) {
-                Text("Add Motorbike")
-            }
-            Button(
-                onClick = { navController.navigate(ROUTE_LOAN) },
-                modifier = Modifier
-                    .width(300.dp)
-                    .padding(bottom = 16.dp)
-            ) {
-                Text("Apply Loan")
-            }
+
+
+
+
+//            Text(
+//                "Quick Actions",
+//                style = MaterialTheme.typography.titleMedium,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(top = 16.dp, bottom = 8.dp),
+//                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+//            )
+//
+//            Button(
+//                onClick = { navController.navigate(ROUTE_INSURANCE) },
+//                modifier = Modifier
+//                    .width(300.dp)
+//                    .padding(bottom = 16.dp)
+//            ) {
+//                Text("Insurance")
+//            }
+//            Button(
+//                onClick = { navController.navigate(ROUTE_MOTORBIKE) },
+//                modifier = Modifier
+//                    .width(300.dp)
+//                    .padding(bottom = 16.dp)
+//            ) {
+//                Text("Add Motorbike")
+//            }
+//            Button(
+//                onClick = { navController.navigate(ROUTE_LOAN) },
+//                modifier = Modifier
+//                    .width(300.dp)
+//                    .padding(bottom = 16.dp)
+//            ) {
+//                Text("Apply Loan")
+//            }
 
         }
     }
@@ -221,6 +248,15 @@ fun SummaryCard(title: String,  onClick: () -> Unit, modifier: Modifier = Modifi
                 "",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
+            )
+            Image(
+                painter = painterResource(com.bmw.motorbikefueljimcomapp.R.drawable.bike5),
+                contentDescription = "home",
+                modifier = Modifier
+
+                    .height(70.dp)
+                    .fillMaxSize()
+
             )
         }
     }

@@ -28,13 +28,14 @@ import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.R
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
 import kotlinx.coroutines.delay
 
 @Composable
 fun Splash_page(navController: NavHostController) {
     LaunchedEffect(Unit) {
         delay(3000)
-        navController.navigate(ROUTE_HOME)
+        navController.navigate(ROUTE_LOGIN)
     }
     Column(
         modifier = Modifier
@@ -43,6 +44,7 @@ fun Splash_page(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Spacer(modifier = Modifier.height(10.dp))
         Text("Motorbike Fuel Jimcom App",
             color = Color.White,
             fontSize = 30.sp,
@@ -50,28 +52,18 @@ fun Splash_page(navController: NavHostController) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(50.dp),
             textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        Spacer(modifier = Modifier.height(10.dp))
 
-
-        Box (
-            contentAlignment = Alignment.Center,
+        Image(painter = painterResource(id = R.drawable.bike10),
+            contentDescription = "bike",
             modifier = Modifier
-                .background(Color.Black)
 
-                .padding(20.dp
-                )
+                .fillMaxSize(),
+            alignment = Alignment.Center
 
-
-        ){
-            Image(painter = painterResource(id = R.drawable.bike0),
-                contentDescription = "bike",
-                modifier = Modifier.size(500.dp),
-                alignment = Alignment.Center
-
-            )
-            Spacer(modifier = Modifier.height(10.dp))
+        )
 
 
-        }
 
     }
 

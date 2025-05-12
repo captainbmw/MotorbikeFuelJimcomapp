@@ -24,6 +24,9 @@ firebaseDatabase = "21.0.0"
 uiTestManifest = "1.8.1"
 uiTooling = "1.8.1"
 uiToolingPreview = "1.8.1"
+firebaseFirestoreKtx = "25.1.4"
+firebaseFirestore = "25.1.4"
+firebaseStorage = "21.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,6 +68,9 @@ ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooli
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 x-x-x-alpha01 = { module = "lifecycle-viewmodel-compose:2.8.0-alpha01" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -2,21 +2,21 @@ package com.bmw.motorbikefueljimcomapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.About.AboutScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Dashboard.DashboardScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Insurance.InsuranceRegistrationScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Repayment.RepaymentScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.home.HomeScreen
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.LoanApplicationForm
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.LoanApplicationScreen
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.UpdateApplicationStatusDialog
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.ApplyLoanScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.UpdateLoanApplication
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.ViewLoanScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.login.LoginScreen
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike.MotorbikeRegistrationScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike.MotorbikeScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.owner.OwnerRegistrationScreen
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.register.RegisterScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.splash.Splash_page
 
 
@@ -35,9 +35,7 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
         composable(ROUTE_LOGIN){
             LoginScreen(navController)
         }
-        composable(ROUTE_REGISTER){
-            RegisterScreen(navController)
-        }
+
 
 
         composable(ROUTE_OWNER){
@@ -45,30 +43,36 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
 
         }
         composable(ROUTE_MOTORBIKE) {
-            MotorbikeRegistrationScreen(navController)
+            MotorbikeScreen(navController)
         }
         composable(ROUTE_REPAYMENT) {
-            RepaymentScreen(loanId = "",navController)
+            RepaymentScreen(
+                navController,
+
+            )
         }
         composable(ROUTE_LOAN) {
-            LoanApplicationScreen(navController)
-
-
-
-
+            ApplyLoanScreen(navController)
         }
-        composable(ROUTE_LOANITEM) {
+        composable(ROUTE_VIEW_LOAN) {
+            ViewLoanScreen(navController)
 
         }
         composable(ROUTE_UPDATE) {
-            UpdateApplicationStatusDialog(currentStatus = "", onDismiss = {}, onConfirm = {selectedStatus, note ->
-                println("Confirmed: Status=$selectedStatus, Note=$note")
-                navController.popBackStack()
-            },navController)
+            UpdateLoanApplication(navController, id = "")
 
         }
-        composable(ROUTE_LOANFORM) {
-            LoanApplicationForm(navController)
+
+        composable(ROUTE_INSURANCE) {
+            InsuranceRegistrationScreen(navController)
+
+
+        }
+        composable(ROUTE_ABOUT) {
+            AboutScreen(navController)
+        }
+        composable(ROUTE_DASHBOARD) {
+            DashboardScreen(navController)
         }
 
 

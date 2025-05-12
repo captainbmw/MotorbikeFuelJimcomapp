@@ -1,19 +1,18 @@
 package com.bmw.motorbikefueljimcomapp.model
 
 
+
+
+import com.google.firebase.database.IgnoreExtraProperties
+
+@IgnoreExtraProperties
 data class LoanApplication(
-    var id: String = "",
-    var ownerId: String = "",
-    var motorbikeId: String = "",
-    var loanAmount: Double = 0.0,
-    var interestRate: Double = 0.0,
-    var applicationDate: Long = System.currentTimeMillis(),
-    var status: String = "Pending", // "Pending", "Approved", "Rejected"
-    var notes: String? = null,
-    var loanPurpose: String? = null,
-    var repaymentPlan: String? = null,
-    var guarantor1Id: String? = null,
-    var guarantor2Id: String? = null,
-    var termsAndConditionsAccepted: Boolean = false,
-    var supportingDocuments: List<String> = emptyList()
+    var id: String = "", // Realtime Database key
+    var applicantName: String = "",
+    var applicantIdNumber: String = "",
+    var loanAmount: String = "",
+    var loanPurpose: String = "",
+    var applicationDate: String = "",
+    var status: String = "Pending", // e.g., "Pending", "Approved", "Rejected"
+    var note: String? = null // Optional field for notes
 )

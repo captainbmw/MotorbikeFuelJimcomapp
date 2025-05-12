@@ -89,6 +89,9 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.hilt.android)
     implementation(libs.hilt.android.compiler)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

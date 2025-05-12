@@ -15,23 +15,22 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TopAppBar
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,18 +46,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-
 import com.bmw.motorbikefueljimcomapp.R
-import com.bmw.motorbikefueljimcomapp.data.AuthViewModel
+import com.bmw.motorbikefueljimcomapp.data.OwnerRegistrationViewModel
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REGISTER
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REPAYMENT
 
 
@@ -67,7 +68,8 @@ import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REPAYMENT
 fun LoginScreen(navController:NavHostController) {
 
     var email by remember { mutableStateOf(TextFieldValue("")) }
-    var pass by remember { mutableStateOf(TextFieldValue("")) }
+    var password by remember { mutableStateOf(TextFieldValue("")) }
+    var passwordVisible by remember { mutableStateOf(false) }
     var context= LocalContext.current
     Scaffold(
         topBar = {
@@ -82,36 +84,8 @@ fun LoginScreen(navController:NavHostController) {
                 )
             })
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
-            }
-        },
-        bottomBar = {
-            NavigationBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
-                    icon = { Icon(Icons.Filled.Home, contentDescription = "Add New Owner") },
-                    label = { Text("Home") },
-                    selected = true)
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
-                    icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
-                    label = { Text("Login") },
-                    selected = true)
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_REPAYMENT)},
-                    icon = { Icon(Icons.Filled.MoreVert, contentDescription = "Add New Owner") },
-                    label = { Text("Repayment") },
-                    selected = true)
-                NavigationBarItem(onClick = { navController.navigate(ROUTE_REGISTER)},
-                    icon = { Icon(Icons.Filled.Person, contentDescription = "Register") },
-                    label = { Text("Register") },
-                    selected = true)
 
-            }
-        }
+
 
     ) {paddingValues ->
         Column(modifier = Modifier
@@ -121,7 +95,7 @@ fun LoginScreen(navController:NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
 
-            Text(text = "Login Here",
+            Text(text = "Owner Login",
                 color = Color.Cyan,
                 fontFamily = FontFamily.Monospace,
                 fontSize = 45.sp,
@@ -130,7 +104,7 @@ fun LoginScreen(navController:NavHostController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(value =email , onValueChange = {email=it},
-                label = { Text(text = "Enter Email") },
+                label = { Text(text = "Enter Email" ) },
                 shape = RoundedCornerShape(16.dp),
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                 modifier = Modifier
@@ -141,30 +115,42 @@ fun LoginScreen(navController:NavHostController) {
                 )
             Spacer(modifier = Modifier.height(20.dp))
 
-            OutlinedTextField(value =pass , onValueChange = {pass=it},
-                label = { Text(text = "Enter Password") },
-                shape = RoundedCornerShape(16.dp),
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            // Password Input with Show/Hide Toggle
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
+                    .background(Color.White)
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .background(Color.White)
+                    ,
+                shape = RoundedCornerShape(12.dp),
+                trailingIcon = {
+                    val image = if (passwordVisible) painterResource(R.drawable.visible) else painterResource(R.drawable.visibilityoff)
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(onClick = {
-                val mylogin= AuthViewModel(navController, context )
-                mylogin.login(email.text.trim(),pass.text.trim())
+                val mylogin= OwnerRegistrationViewModel(navController, context )
+                        mylogin.login(email.text.trim(),password.text.trim(),)
             }, modifier = Modifier.width(300.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
             ) {
-                Text(text = "Log In",
+                Text(text = "LogIn",
                     color = Color.Green)
             }
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text( "Don't have account? Click to Register",
-                modifier = Modifier.clickable { navController.navigate(ROUTE_REGISTER) },
+            Text( "Don't have account? Click to Register as Owner",
+                modifier = Modifier.clickable { navController.navigate(ROUTE_OWNER) },
                 color = Color.Blue,
                 fontSize = 20.sp)
         }

@@ -5,10 +5,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.navigation.NavHostController
 import com.bmw.motorbikefueljimcomapp.model.Owner
-import com.bmw.motorbikefueljimcomapp.model.User
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REGISTER
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -20,37 +19,37 @@ class OwnerRegistrationViewModel (var navController: NavHostController,var conte
         mAuth= FirebaseAuth.getInstance()
 
     }
-    fun signup(fullname: String, idNumber: String, kraPin: String, phoneNumber: String, address: String, registrationDate: String,confirmidNumber: String){
+    fun signup(fullname: String,email: String,password: String,confirmpassword: String){
 
 
-        if (fullname.isBlank()||idNumber.isBlank()||kraPin.isBlank()||phoneNumber.isBlank()||address.isBlank()||registrationDate.isBlank()){
+        if (fullname.isBlank()||email.isBlank()||password.isBlank()||confirmpassword.isBlank()){
 
             Toast.makeText(context,"Please firstname,lastname ,email and password can't be blank",Toast.LENGTH_LONG).show()
             return
-        }else if (idNumber != confirmidNumber){
+        }else if (password != confirmpassword){
             Toast.makeText(context,"IdNumber do not match",Toast.LENGTH_LONG).show()
             return
         }else{
-            mAuth.createUserWithEmailAndPassword(fullname,idNumber,).addOnCompleteListener{
+            mAuth.createUserWithEmailAndPassword(email,password,).addOnCompleteListener{
                 if (it.isSuccessful){
-                    val ownerdata= Owner(fullname,idNumber,kraPin,phoneNumber,address,registrationDate,mAuth.currentUser!!.uid)
+                    val ownerdata= Owner(fullname,email,password,confirmpassword,mAuth.currentUser!!.uid)
                     val regeRef= FirebaseDatabase.getInstance().getReference()
-                        .child("Users/"+mAuth.currentUser!!.uid)
+                        .child("Owners/"+mAuth.currentUser!!.uid)
                     regeRef.setValue(ownerdata).addOnCompleteListener{
                         if(it.isSuccessful){
                             Toast.makeText(context,"${it.exception!!.message}",Toast.LENGTH_LONG).show()
-                            navController.navigate(ROUTE_LOGIN)
+                            navController.navigate(ROUTE_HOME)
                         }
                     }
                 }else{
-                    navController.navigate(ROUTE_REGISTER)
+                    navController.navigate(ROUTE_OWNER)
                 }
             }
         }
 
     }
-    fun login(fullname: String,idNumber: String,kraPin: String,pass: String){
-        mAuth.signInWithEmailAndPassword(fullname,idNumber).addOnCompleteListener{
+    fun login(email: String,password: String){
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener{
             if (it.isSuccessful){
                 Toast.makeText(context,"Successful Logged In",Toast.LENGTH_LONG).show()
                 navController.navigate(ROUTE_HOME)
