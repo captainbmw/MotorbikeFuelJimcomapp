@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -43,12 +44,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.R
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_ABOUT
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_DASHBOARD
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_INSURANCE
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOAN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_MOTORBIKE
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_OWNER
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REPAYMENT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,9 +100,9 @@ fun HomeScreen(
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = { /* Navigate to another screen */ },
-                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
-                    label = { Text("Settings") }
+                    onClick = { navController.navigate(ROUTE_REPAYMENT) },
+                    icon = { Icon(Icons.Filled.MailOutline, contentDescription = "Settings") },
+                    label = { Text("Repayment") }
                 )
 //                NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
 //                    icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
@@ -166,19 +170,19 @@ fun HomeScreen(
             ) {
                 SummaryCard(
                     title = "Insurance",
-                    onClick = { navController.navigate(ROUTE_OWNER) },
+                    onClick = { navController.navigate(ROUTE_INSURANCE) },
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 SummaryCard(
                     title = "Dashboard",
-                    onClick = { navController.navigate(ROUTE_MOTORBIKE) },
+                    onClick = { navController.navigate(ROUTE_DASHBOARD) },
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 SummaryCard(
                     title = "About",
-                    onClick = { navController.navigate(ROUTE_LOAN) },
+                    onClick = { navController.navigate(ROUTE_ABOUT) },
                     modifier = Modifier.weight(1f))
             }
 
