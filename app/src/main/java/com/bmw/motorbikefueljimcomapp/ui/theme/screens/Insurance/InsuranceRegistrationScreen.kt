@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.InsuranceRegistrationViewModel
@@ -61,55 +62,55 @@ fun InsuranceRegistrationScreen(navController: NavHostController) {
     var coverageType by remember { mutableStateOf(TextFieldValue("")) }
     var premiumAmount by remember { mutableStateOf(TextFieldValue("")) }
 
-   Scaffold(
-       topBar = {
-           TopAppBar(title = {
-               Text(
-                   "Motorbike Fuel Jimcom App",
-                   fontWeight = FontWeight.Bold,
-                   style = MaterialTheme.typography.titleLarge,
-                   color = Color.Blue,
-                   modifier = Modifier
-                       .padding(start = 16.dp),
-               )
-           })
-       },
-
-       floatingActionButton = {
-           FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
-               Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
-           }
-       },
-       bottomBar = {
-           NavigationBar(
-               modifier = Modifier
-                   .fillMaxWidth()
-                   .padding(16.dp)
-           ) {
-               NavigationBarItem(onClick = { navController.navigate(ROUTE_HOME)},
-                   icon = { Icon(Icons.Filled.Home, contentDescription = "Add New Owner") },
-                   label = { Text("Home") },
-                   selected = true)
-               NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
-                   icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
-                   label = { Text("Login") },
-                   selected = true)
-               NavigationBarItem(onClick = { navController.navigate(ROUTE_REPAYMENT)},
-                   icon = { Icon(Icons.Filled.MoreVert, contentDescription = "Add New Owner") },
-                   label = { Text("Repayment") },
-                   selected = true)
-               NavigationBarItem(onClick = { navController.navigate(ROUTE_OWNER)},
-                   icon = { Icon(Icons.Filled.Person, contentDescription = "Owner") },
-                   label = { Text("Owner") },
-                   selected = true)
-
-           }
-       }
-
-   ) {paddingValues ->
+//   Scaffold(
+//       topBar = {
+//           TopAppBar(title = {
+//               Text(
+//                   "Motorbike Fuel Jimcom App",
+//                   fontWeight = FontWeight.Bold,
+//                   style = MaterialTheme.typography.titleLarge,
+//                   color = Color.Blue,
+//                   modifier = Modifier
+//                       .padding(start = 16.dp),
+//               )
+//           })
+//       },
+//
+////       floatingActionButton = {
+////           FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
+////               Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
+////           }
+////       },
+////       bottomBar = {
+////           NavigationBar(
+////               modifier = Modifier
+////                   .fillMaxWidth()
+////                   .padding(16.dp)
+////           ) {
+////               NavigationBarItem(onClick = { navController.navigate(ROUTE_HOME)},
+////                   icon = { Icon(Icons.Filled.Home, contentDescription = "Add New Owner") },
+////                   label = { Text("Home") },
+////                   selected = true)
+////               NavigationBarItem(onClick = { navController.navigate(ROUTE_LOGIN)},
+////                   icon = { Icon(Icons.Filled.Person, contentDescription = "Login") },
+////                   label = { Text("Login") },
+////                   selected = true)
+////               NavigationBarItem(onClick = { navController.navigate(ROUTE_REPAYMENT)},
+////                   icon = { Icon(Icons.Filled.MoreVert, contentDescription = "Add New Owner") },
+////                   label = { Text("Repayment") },
+////                   selected = true)
+////               NavigationBarItem(onClick = { navController.navigate(ROUTE_OWNER)},
+////                   icon = { Icon(Icons.Filled.Person, contentDescription = "Owner") },
+////                   label = { Text("Owner") },
+////                   selected = true)
+////
+////           }
+////       }
+//
+//   ) {paddingValues ->
        Column(
            modifier = Modifier
-               .padding(paddingValues)
+
                .fillMaxSize()
                .padding(16.dp),
            horizontalAlignment = Alignment.CenterHorizontally,
@@ -185,10 +186,11 @@ fun InsuranceRegistrationScreen(navController: NavHostController) {
                },
                modifier = Modifier.fillMaxWidth()
            ) {
-               Text("Save Registration")
+               Text("Save Registration",
+                   fontSize = 20.sp)
            }
        }
-   }
+
 }
 
 
