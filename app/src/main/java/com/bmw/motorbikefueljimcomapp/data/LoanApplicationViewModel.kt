@@ -1,7 +1,6 @@
 package com.bmw.motorbikefueljimcomapp.data
 
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
@@ -9,21 +8,21 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavHostController
 import com.bmw.motorbikefueljimcomapp.model.LoanApplication
 import com.bmw.motorbikefueljimcomapp.model.Upload
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class productviewmodel(var navController: NavHostController, var context: Context) {
+class LoanApplicationViewModel(var navController: NavHostController, var context: Context) {
     var authRepository: OwnerRegistrationViewModel
 
 
     init {
         authRepository = OwnerRegistrationViewModel(navController, context)
         if (!authRepository.isloggedin()) {
-            navController.navigate(ROUTE_LOGIN)
+            navController.navigate(ROUTE_HOME)
         }
 
     }
@@ -51,20 +50,20 @@ class productviewmodel(var navController: NavHostController, var context: Contex
     }
 
     fun viewProducts(
-        product: MutableState<LoanApplication>,
-        products: SnapshotStateList<LoanApplication>
-    ): SnapshotStateList<LoanApplication> {
-        var ref = FirebaseDatabase.getInstance().getReference().child("Products")
+        loan: MutableState<Upload>,
+        Loans: SnapshotStateList<Upload>
+    ): SnapshotStateList<Upload> {
+        var ref = FirebaseDatabase.getInstance().getReference().child("Loans")
 
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                products.clear()
+                Loans.clear()
                 for (snap in snapshot.children) {
-                    val value = snap.getValue(LoanApplication::class.java)
-                    product.value = value!!
-                    products.add(value)
+                    val value = snap.getValue(Upload::class.java)
+                    loan.value = value!!
+                    Loans.add(value)
                 }
             }
 
@@ -72,12 +71,12 @@ class productviewmodel(var navController: NavHostController, var context: Contex
                 Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
             }
         })
-        return products
+        return Loans
     }
 
     fun deleteProduct(id: String) {
         var delRef = FirebaseDatabase.getInstance().getReference()
-            .child("Products/$id")
+            .child("Loans/$id")
 
         delRef.removeValue().addOnCompleteListener {
 
@@ -97,9 +96,9 @@ class productviewmodel(var navController: NavHostController, var context: Contex
                       applicationDate: String,
                       status: String, note: String) {
         var updateRef = FirebaseDatabase.getInstance().getReference()
-            .child("Loan Application/$id")
+            .child("Uploads/$id")
 
-        var updateData = LoanApplication(id, applicantName , applicantIdNumber , loanAmount, loanPurpose, applicationDate, status, note )
+        var updateData = Upload(id, applicantName , applicantIdNumber , loanAmount, loanPurpose, applicationDate, status, note )
         updateRef.setValue(updateData).addOnCompleteListener {
 
             if (it.isSuccessful) {

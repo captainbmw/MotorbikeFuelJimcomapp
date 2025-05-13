@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.RepaymentViewModel
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,7 +116,9 @@ fun RepaymentScreen(
                         repaymentDate.text.trim(),
                         amountPaid.text.trim(),paymentMethod.
                         text.trim(),transactionId.text.trim(),
-                        amountPaid.text.trim(),paymentMethod.text.trim(),transactionId.text.trim())
+                        amountPaid.text.trim(),paymentMethod.text.trim(),
+                        transactionId.text.trim())
+                    navController.navigate(ROUTE_HOME)
 
 
                 },

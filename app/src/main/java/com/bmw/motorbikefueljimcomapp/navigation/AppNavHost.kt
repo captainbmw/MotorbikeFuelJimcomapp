@@ -13,7 +13,7 @@ import com.bmw.motorbikefueljimcomapp.ui.theme.screens.Repayment.RepaymentScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.home.HomeScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.ApplyLoanScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.UpdateLoanApplication
-import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.ViewLoanScreen
+import com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan.ViewUploadLoans
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.login.LoginScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike.MotorbikeScreen
 import com.bmw.motorbikefueljimcomapp.ui.theme.screens.owner.OwnerRegistrationScreen
@@ -55,7 +55,7 @@ fun AppNavHost(modifier: Modifier=Modifier,navController:NavHostController= reme
             ApplyLoanScreen(navController)
         }
         composable(ROUTE_VIEW_LOAN) {
-            ViewLoanScreen(navController)
+            ViewUploadLoans(navController)
 
         }
         composable(ROUTE_UPDATE) {

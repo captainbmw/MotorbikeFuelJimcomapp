@@ -91,7 +91,7 @@ fun LoginScreen(navController:NavHostController) {
         Column(modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
-            .paint(painter = painterResource(R.drawable.bike4), contentScale = ContentScale.FillBounds),
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
 
@@ -110,7 +110,7 @@ fun LoginScreen(navController:NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .background(Color.White),
+                   ,
 
                 )
             Spacer(modifier = Modifier.height(20.dp))
@@ -124,7 +124,7 @@ fun LoginScreen(navController:NavHostController) {
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
-                    .background(Color.White)
+
                     .fillMaxWidth()
                     .padding(8.dp)
                     ,

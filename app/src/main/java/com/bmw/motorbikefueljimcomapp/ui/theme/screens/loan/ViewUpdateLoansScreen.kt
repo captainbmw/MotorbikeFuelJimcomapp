@@ -1,6 +1,8 @@
 package com.bmw.motorbikefueljimcomapp.ui.theme.screens.loan
 
 
+
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,23 +26,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.bmw.motorbikefueljimcomapp.data.productviewmodel
-import com.bmw.motorbikefueljimcomapp.model.LoanApplication
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_REPAYMENT
+import com.bmw.motorbikefueljimcomapp.data.LoanApplicationViewModel
+import com.bmw.motorbikefueljimcomapp.model.Upload
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_UPDATE
 
 
 @Composable
-fun ViewLoanScreen(navController:NavHostController) {
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+fun ViewUploadLoans(navController:NavHostController) {
+
 
         var context = LocalContext.current
-        var productRepository = productviewmodel(navController, context)
-        val emptyProductState = remember { mutableStateOf(LoanApplication("","","","",
-            "","","","")) }
-        var emptyProductsListState = remember { mutableStateListOf<LoanApplication>() }
+        var productRepository = LoanApplicationViewModel(navController, context)
+        var loan = remember { mutableStateOf(Upload("","","","","")) }
+        var Loans = remember { mutableStateListOf<Upload>() }
+        productRepository.viewProducts(loan, Loans)
 
-        var products = productRepository.viewProducts(emptyProductState, emptyProductsListState)
+
+        val emptyUploadState = remember { mutableStateOf(Upload("","","","","")) }
+        var emptyUploadsListState = remember { mutableStateListOf<Upload>() }
+
+        var uploads = productRepository.viewUploads(emptyUploadState, emptyUploadsListState)
 
 
         Column(
@@ -48,39 +53,43 @@ fun ViewLoanScreen(navController:NavHostController) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "All products",
+            Text(text = "All Upload Loans" ,
                 fontSize = 30.sp,
                 fontFamily = FontFamily.Cursive,
                 color = Color.Red)
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            LazyColumn(){
-                items(products){
-                    ProductItem(
+            LazyColumn(
+                modifier = Modifier.background(Color.Blue)
+            ){
+                items(uploads){
+                    UploadItem(
                         applicantName = it.applicantName,
                         applicantIdNumber = it.applicantIdNumber,
                         loanAmount = it.loanAmount,
-                        loanPurpose = it.loanPurpose,
                         applicationDate = it.applicationDate,
                         status = it.status,
+                        note = it.note.toString(),
                         id = it.id,
                         navController = navController,
                         productRepository = productRepository,
-                        note = it.note!!
+                        loanPurpose = it.loanPurpose
                     )
                 }
             }
         }
-    }
 
 }
 
+
 @Composable
-fun ProductItem(id:String,applicantName:String,applicantIdNumber:String,loanAmount:String,
-                loanPurpose:String,applicationDate:String,status:String,note:String,
-                navController:NavHostController, productRepository: productviewmodel
-) {
+fun UploadItem(id: String,applicantName: String, applicantIdNumber: String,
+               loanAmount: String,
+               loanPurpose: String,
+               applicationDate: String,
+               status: String, note: String,
+               navController:NavHostController, productRepository: LoanApplicationViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = applicantName)
@@ -90,23 +99,27 @@ fun ProductItem(id:String,applicantName:String,applicantIdNumber:String,loanAmou
         Text(text = applicationDate)
         Text(text = status)
         Text(text = note)
+//        Image(
+//            painter = rememberAsyncImagePainter(imageUrl),
+//            contentDescription = null,
+//            modifier = Modifier.size(128.dp)
+//        )
         Button(onClick = {
             productRepository.deleteProduct(id)
         }) {
             Text(text = "Delete")
         }
         Button(onClick = {
-            navController.navigate(ROUTE_REPAYMENT+"/$id")
+            navController.navigate(ROUTE_UPDATE +"/$id")
         }) {
             Text(text = "Update")
         }
     }
-
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun view() {
-    ViewLoanScreen(rememberNavController())
-
+private fun View() {
+    ViewUploadLoans(rememberNavController())
+    
 }

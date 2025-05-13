@@ -24,10 +24,10 @@ class OwnerRegistrationViewModel (var navController: NavHostController,var conte
 
         if (fullname.isBlank()||email.isBlank()||password.isBlank()||confirmpassword.isBlank()){
 
-            Toast.makeText(context,"Please firstname,lastname ,email and password can't be blank",Toast.LENGTH_LONG).show()
+            Toast.makeText(context,"Please fullname ,email and password can't be blank",Toast.LENGTH_LONG).show()
             return
         }else if (password != confirmpassword){
-            Toast.makeText(context,"IdNumber do not match",Toast.LENGTH_LONG).show()
+            Toast.makeText(context,"Password do not match",Toast.LENGTH_LONG).show()
             return
         }else{
             mAuth.createUserWithEmailAndPassword(email,password,).addOnCompleteListener{

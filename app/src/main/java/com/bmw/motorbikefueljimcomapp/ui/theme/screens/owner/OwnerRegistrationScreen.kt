@@ -142,6 +142,7 @@ fun OwnerRegistrationScreen(
                 myregister.signup(fullName.text.trim(),email.text.trim(),
                     password.text.trim(),
                     confirmPassword.text.trim())
+                navController.navigate(ROUTE_HOME)
             },
                 modifier = Modifier.width(300.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black)) {

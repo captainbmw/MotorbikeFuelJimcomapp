@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.bmw.motorbikefueljimcomapp.data.productviewmodel
+import com.bmw.motorbikefueljimcomapp.data.LoanApplicationViewModel
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_VIEW_LOAN
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_UPDATE
 
 
 @Composable
@@ -106,17 +106,26 @@ fun ApplyLoanScreen(navController: NavHostController) {
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            value = status,
+            onValueChange = { status = it },
+            label = { Text(text = "Status *") },
+            shape = RoundedCornerShape(16.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
             //-----------WRITE THE SAVE LOGIC HERE---------------//
-            var productRepository = productviewmodel(navController,context)
+            var productRepository = LoanApplicationViewModel(navController,context)
             productRepository.saveLoan(applicantName.text.trim(),applicantIdNumber.text.trim(),
                 loanAmount.text.trim(),loanPurpose.text.trim(),
                 status.text.trim(),
                 note.text.trim(),applicationDate.text.trim(), note = "")
-            navController.navigate(ROUTE_HOME)
+            navController.navigate(ROUTE_UPDATE)
 
 
         },

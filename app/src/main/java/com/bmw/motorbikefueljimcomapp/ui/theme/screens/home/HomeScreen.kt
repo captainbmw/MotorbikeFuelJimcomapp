@@ -75,11 +75,12 @@ fun HomeScreen(
                 )
             })
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
-            }
-        },
+
+//        floatingActionButton = {
+//            FloatingActionButton(onClick = { navController.navigate(ROUTE_OWNER) }) {
+//                Icon(Icons.Filled.Add, contentDescription = "Add New Owner")
+//            }
+//        },
         bottomBar = {
             NavigationBar(
                 modifier = Modifier

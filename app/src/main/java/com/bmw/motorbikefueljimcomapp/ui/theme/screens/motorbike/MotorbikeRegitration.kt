@@ -2,12 +2,16 @@ package com.bmw.motorbikefueljimcomapp.ui.theme.screens.motorbike
 
 
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -27,15 +31,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.MotorbikeViewModel
 import com.bmw.motorbikefueljimcomapp.model.Motorbike
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_MOTORBIKE
 import com.bmw.motorbikefueljimcomapp.ui.theme.MotorbikeFuelJimcomAppTheme
 
@@ -61,43 +68,58 @@ fun MotorbikeScreen(navController: NavHostController) {
             FloatingActionButton(onClick = { navController.navigate(ROUTE_MOTORBIKE) }) {
                 Icon(Icons.Filled.Add, "Add New Motorbike")
             }
-        }
+        },
+
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = numberplate,
                 onValueChange = { numberplate = it },
                 label = { Text("Number Plate") },
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
 
             )
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = brand,
                 onValueChange = { brand = it },
                 label = { Text("Brand") },
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = model,
                 onValueChange = { model = it },
                 label = { Text("Model") },
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = color,
                 onValueChange = { color = it },
+                shape = RoundedCornerShape(16.dp),
                 label = { Text("Color") },
                 modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(10.dp))
 
             Button(onClick = {
                 var myMotorbike= MotorbikeViewModel(navController,context)
-                myMotorbike.saveMotorbike(numberplate.text.trim(),brand.text.trim(),model.text.trim(),color.text.trim())
+                myMotorbike.saveMotorbike(numberplate.text.trim(),brand.text.trim(),
+                    model.text.trim(),color.text.trim())
+                navController.navigate(ROUTE_HOME)
             }) {
-                Text(text = "Save Motorbike")
+                Text(text = "Save Motorbike",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold)
 
             }
 
