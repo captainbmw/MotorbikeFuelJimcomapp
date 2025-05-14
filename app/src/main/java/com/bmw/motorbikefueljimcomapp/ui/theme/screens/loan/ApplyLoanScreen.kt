@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bmw.motorbikefueljimcomapp.data.LoanApplicationViewModel
+import com.bmw.motorbikefueljimcomapp.model.Applicant
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
 import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_UPDATE
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_VIEW_LOAN
 
 
 @Composable
@@ -57,17 +59,15 @@ fun ApplyLoanScreen(navController: NavHostController) {
 
         )
 
-        var applicantName by remember { mutableStateOf(TextFieldValue("")) }
-        var applicantIdNumber by remember { mutableStateOf(TextFieldValue("")) }
-        var loanAmount by remember { mutableStateOf(TextFieldValue("")) }
-        var loanPurpose by remember { mutableStateOf(TextFieldValue("")) }
+        var Applicantname by remember { mutableStateOf(TextFieldValue("")) }
+        var ApplicantIdNumber by remember { mutableStateOf(TextFieldValue("")) }
+        var ApplicantloanAmount by remember { mutableStateOf(TextFieldValue("")) }
+        var ApplicantloanPurpose by remember { mutableStateOf(TextFieldValue("")) }
         var applicationDate by remember { mutableStateOf(TextFieldValue("")) }
-        var status by remember { mutableStateOf(TextFieldValue("")) }
-        var note by remember { mutableStateOf(TextFieldValue("")) }
 
         OutlinedTextField(
-            value = applicantName,
-            onValueChange = { applicantName = it },
+            value = Applicantname,
+            onValueChange = { Applicantname = it },
             label = { Text(text = "ApplicantName *") },
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
@@ -76,22 +76,22 @@ fun ApplyLoanScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
-            value = applicantIdNumber,
-            onValueChange = { applicantIdNumber = it },
+            value =   ApplicantIdNumber,
+            onValueChange = { ApplicantIdNumber = it },
             label = { Text(text = "Applicant IdNumber  *") },
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
         OutlinedTextField(
-            value = loanAmount,
-            onValueChange = { loanAmount = it },
+            value = ApplicantloanAmount,
+            onValueChange = { ApplicantloanAmount = it },
             label = { Text(text = "Enter Loan Amount  *") },
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
         OutlinedTextField(
-            value = loanPurpose,
-            onValueChange = { loanPurpose= it },
+            value = ApplicantloanPurpose,
+            onValueChange = { ApplicantloanPurpose = it },
             label = { Text(text = "Loan Purpose *") },
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
@@ -106,26 +106,16 @@ fun ApplyLoanScreen(navController: NavHostController) {
             shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
-        Spacer(modifier = Modifier.height(20.dp))
 
-        OutlinedTextField(
-            value = status,
-            onValueChange = { status = it },
-            label = { Text(text = "Status *") },
-            shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
             //-----------WRITE THE SAVE LOGIC HERE---------------//
             var productRepository = LoanApplicationViewModel(navController,context)
-            productRepository.saveLoan(applicantName.text.trim(),applicantIdNumber.text.trim(),
-                loanAmount.text.trim(),loanPurpose.text.trim(),
-                status.text.trim(),
-                note.text.trim(),applicationDate.text.trim(), note = "")
-            navController.navigate(ROUTE_UPDATE)
+            productRepository.saveProduct(Applicantname.text.trim(),ApplicantIdNumber.text.trim(),
+                ApplicantloanAmount.text.trim(),ApplicantloanPurpose.text.trim(),applicationDate.text.trim(),)
+            navController.navigate(ROUTE_VIEW_LOAN)
 
 
         },

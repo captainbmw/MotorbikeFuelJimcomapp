@@ -1,6 +1,10 @@
 package com.bmw.motorbikefueljimcomapp.model
 
-class Upload{
+
+
+
+
+class Applicant{
     var name: String = ""
     var IdNumber: String = ""
     var loanAmount: String = ""

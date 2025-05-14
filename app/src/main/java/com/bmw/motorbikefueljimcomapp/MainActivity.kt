@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.bmw.motorbikefueljimcomapp.navigation.AppNavHost
 import com.bmw.motorbikefueljimcomapp.ui.theme.MotorbikeFuelJimcomAppTheme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
         setContent {
             MotorbikeFuelJimcomAppTheme {

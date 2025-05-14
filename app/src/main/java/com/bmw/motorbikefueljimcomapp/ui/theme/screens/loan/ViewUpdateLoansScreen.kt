@@ -37,12 +37,12 @@ fun ViewUploadLoans(navController:NavHostController) {
 
         var context = LocalContext.current
         var productRepository = LoanApplicationViewModel(navController, context)
-        var loan = remember { mutableStateOf(Upload("","","","","")) }
+        var loan = remember { mutableStateOf(Upload("","","","","","")) }
         var Loans = remember { mutableStateListOf<Upload>() }
-        productRepository.viewProducts(loan, Loans)
+        productRepository.viewUploads(loan, Loans)
 
 
-        val emptyUploadState = remember { mutableStateOf(Upload("","","","","")) }
+        val emptyUploadState = remember { mutableStateOf(Upload("","","","","","")) }
         var emptyUploadsListState = remember { mutableStateListOf<Upload>() }
 
         var uploads = productRepository.viewUploads(emptyUploadState, emptyUploadsListState)
@@ -53,7 +53,7 @@ fun ViewUploadLoans(navController:NavHostController) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "All Upload Loans" ,
+            Text(text = "ALL UPLOADED LOANS" ,
                 fontSize = 30.sp,
                 fontFamily = FontFamily.Cursive,
                 color = Color.Red)
@@ -65,16 +65,16 @@ fun ViewUploadLoans(navController:NavHostController) {
             ){
                 items(uploads){
                     UploadItem(
-                        applicantName = it.applicantName,
-                        applicantIdNumber = it.applicantIdNumber,
+                        applicantName = it.name,
+                        applicantIdNumber = it.IdNumber,
                         loanAmount = it.loanAmount,
                         applicationDate = it.applicationDate,
-                        status = it.status,
-                        note = it.note.toString(),
+
                         id = it.id,
                         navController = navController,
                         productRepository = productRepository,
-                        loanPurpose = it.loanPurpose
+                        loanPurpose = it.loanPurpose,
+
                     )
                 }
             }
@@ -88,7 +88,7 @@ fun UploadItem(id: String,applicantName: String, applicantIdNumber: String,
                loanAmount: String,
                loanPurpose: String,
                applicationDate: String,
-               status: String, note: String,
+
                navController:NavHostController, productRepository: LoanApplicationViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -97,8 +97,7 @@ fun UploadItem(id: String,applicantName: String, applicantIdNumber: String,
         Text(text = loanAmount)
         Text(text = loanPurpose)
         Text(text = applicationDate)
-        Text(text = status)
-        Text(text = note)
+
 //        Image(
 //            painter = rememberAsyncImagePainter(imageUrl),
 //            contentDescription = null,

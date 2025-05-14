@@ -1,45 +1,48 @@
 package com.bmw.motorbikefueljimcomapp.data
 
 
+import android.app.ProgressDialog
 import android.content.Context
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavHostController
-import com.bmw.motorbikefueljimcomapp.model.LoanApplication
+import com.bmw.motorbikefueljimcomapp.model.Applicant
 import com.bmw.motorbikefueljimcomapp.model.Upload
-import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_HOME
+import com.bmw.motorbikefueljimcomapp.navigation.ROUTE_LOGIN
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 
 
 class LoanApplicationViewModel(var navController: NavHostController, var context: Context) {
     var authRepository: OwnerRegistrationViewModel
-
+    var progress: ProgressDialog
 
     init {
         authRepository = OwnerRegistrationViewModel(navController, context)
         if (!authRepository.isloggedin()) {
-            navController.navigate(ROUTE_HOME)
+            navController.navigate(ROUTE_LOGIN)
         }
-
+        progress = ProgressDialog(context)
+        progress.setTitle("Loading")
+        progress.setMessage("Please wait...")
     }
 
 
-    fun saveLoan(id: String,applicantName: String, applicantIdNumber: String,
-                    loanAmount: String,
-                    loanPurpose: String,
-                    applicationDate: String,
-                    status: String, note: String) {
+    fun saveProduct(Applicantname: String, ApplicantIdNumber: String, ApplicantloanAmount: String,
+                    ApplicantloanPurpose: String, ApplicantapplicationDate: String) {
         var id = System.currentTimeMillis().toString()
-        var productData = LoanApplication(id, applicantName, applicantIdNumber, loanAmount, loanPurpose, applicationDate, status, note)
+        var productData = Applicant(Applicantname, ApplicantIdNumber, ApplicantloanAmount,
+            ApplicantloanPurpose, ApplicantapplicationDate, id)
         var productRef = FirebaseDatabase.getInstance().getReference()
             .child("Products/$id")
-
+        progress.show()
         productRef.setValue(productData).addOnCompleteListener {
-
+            progress.dismiss()
             if (it.isSuccessful) {
                 Toast.makeText(context, "Saving successful", Toast.LENGTH_SHORT).show()
             } else {
@@ -50,20 +53,20 @@ class LoanApplicationViewModel(var navController: NavHostController, var context
     }
 
     fun viewProducts(
-        loan: MutableState<Upload>,
-        Loans: SnapshotStateList<Upload>
-    ): SnapshotStateList<Upload> {
-        var ref = FirebaseDatabase.getInstance().getReference().child("Loans")
+        product: MutableState<Applicant>,
+        products: SnapshotStateList<Applicant>
+    ): SnapshotStateList<Applicant> {
+        var ref = FirebaseDatabase.getInstance().getReference().child("Products")
 
-
+        progress.show()
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
-                Loans.clear()
+                progress.dismiss()
+                products.clear()
                 for (snap in snapshot.children) {
-                    val value = snap.getValue(Upload::class.java)
-                    loan.value = value!!
-                    Loans.add(value)
+                    val value = snap.getValue(Applicant::class.java)
+                    product.value = value!!
+                    products.add(value)
                 }
             }
 
@@ -71,15 +74,15 @@ class LoanApplicationViewModel(var navController: NavHostController, var context
                 Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
             }
         })
-        return Loans
+        return products
     }
 
     fun deleteProduct(id: String) {
         var delRef = FirebaseDatabase.getInstance().getReference()
-            .child("Loans/$id")
-
+            .child("Products/$id")
+        progress.show()
         delRef.removeValue().addOnCompleteListener {
-
+            progress.dismiss()
             if (it.isSuccessful) {
                 Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show()
             } else {
@@ -88,19 +91,14 @@ class LoanApplicationViewModel(var navController: NavHostController, var context
         }
     }
 
-    fun updateProduct(id:String,
-                      applicantName: String,
-                      applicantIdNumber: String,
-                      loanAmount: String,
-                      loanPurpose: String,
-                      applicationDate: String,
-                      status: String, note: String) {
+    fun updateProduct(name: String, IdNumber: String, loanAmount: String,
+                      loanPurpose: String, applicationDate: String, id: String) {
         var updateRef = FirebaseDatabase.getInstance().getReference()
-            .child("Uploads/$id")
-
-        var updateData = Upload(id, applicantName , applicantIdNumber , loanAmount, loanPurpose, applicationDate, status, note )
+            .child("Products/$id")
+        progress.show()
+        var updateData = Applicant(name, IdNumber, loanAmount, loanPurpose, applicationDate, id)
         updateRef.setValue(updateData).addOnCompleteListener {
-
+            progress.dismiss()
             if (it.isSuccessful) {
                 Toast.makeText(context, "Update successful", Toast.LENGTH_SHORT).show()
             } else {
@@ -108,38 +106,39 @@ class LoanApplicationViewModel(var navController: NavHostController, var context
             }
         }
     }
-//
-//    fun saveProductWithImage(id: String, applicantName: String, applicantIdNumber: String,filePath: Uri){
-//        var id = System.currentTimeMillis().toString()
-//        var storageReference = FirebaseStorage.getInstance().getReference().child("Uploads/$id")
-//        progress.show()
-//
-//        storageReference.putFile(filePath).addOnCompleteListener{
-//            progress.dismiss()
-//            if (it.isSuccessful){
-//                // Proceed to store other data into the db
-//                storageReference.downloadUrl.addOnSuccessListener {
-//                    var imageUrl = it.toString()
-//                    var houseData = Upload(id, applicantName, applicantIdNumber, imageUrl)
-//                    var dbRef = FirebaseDatabase.getInstance()
-//                        .getReference().child("Uploads/$id")
-//                    dbRef.setValue(houseData)
-//                    Toast.makeText(context, "Upload successful", Toast.LENGTH_SHORT).show()
-//                }
-//            }else{
-//                Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
+
+    fun saveProductWithImage(name: String,IdNumber:String,
+                             loanAmount:String,loanPurpose:String,applicationDate:String, filePath: Uri){
+        var id = System.currentTimeMillis().toString()
+        var storageReference = FirebaseStorage.getInstance().getReference().child("Uploads/$id")
+        progress.show()
+
+        storageReference.putFile(filePath).addOnCompleteListener{
+            progress.dismiss()
+            if (it.isSuccessful){
+                // Proceed to store other data into the db
+                storageReference.downloadUrl.addOnSuccessListener {
+                    var imageUrl = it.toString()
+                    var houseData = Upload(name,IdNumber,loanAmount,loanPurpose,applicationDate,id)
+                    var dbRef = FirebaseDatabase.getInstance()
+                        .getReference().child("Uploads/$id")
+                    dbRef.setValue(houseData)
+                    Toast.makeText(context, "Upload successful", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 
     fun viewUploads(upload:MutableState<Upload>, uploads:SnapshotStateList<Upload>): SnapshotStateList<Upload> {
         var ref = FirebaseDatabase.getInstance().getReference().child("Uploads")
 
-
+        progress.show()
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
+                progress.dismiss()
                 uploads.clear()
                 for (snap in snapshot.children){
                     val value = snap.getValue(Upload::class.java)

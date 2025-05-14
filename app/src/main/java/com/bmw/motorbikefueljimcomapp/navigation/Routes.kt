@@ -11,6 +11,7 @@ const val ROUTE_REPAYMENT="repayment"
 const val ROUTE_INSURANCE="insurance"
 
 const val ROUTE_VIEW_LOAN="view"
+const val ROUTE_VIEW_UPLOAD_LOAN="view upload"
 
 const val ROUTE_ABOUT="about"
 const val ROUTE_UPDATE=" update application"

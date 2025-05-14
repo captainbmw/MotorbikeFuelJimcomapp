@@ -4,6 +4,7 @@ package com.bmw.motorbikefueljimcomapp.ui.theme.screens.home
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -64,6 +65,7 @@ fun HomeScreen(
 
 
     Scaffold(
+        modifier = Modifier.background(Color.Black),
         topBar = {
             TopAppBar(title = {
                 Text(
@@ -71,7 +73,9 @@ fun HomeScreen(
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Blue,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier
+
+                        .padding(start = 16.dp),
                 )
             })
         },
